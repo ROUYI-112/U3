@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>星窗魔法單字｜一次 5 個字</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#090d2b; --indigo:#1a1f5c; --violet:#34287e;
+  --glass:rgba(24,21,70,.9); --glass2:rgba(40,33,104,.85);
+  --line:rgba(190,170,255,.32);
+  --ink:#fff6fc; --soft:#cbbfee;
+  --pink:#f59ac6; --pink-d:#d8649f; --magenta:#e451c0; --rose:#e2416a;
+  --lav:#b8a4ff; --cyan:#7ad8ff; --aqua:#6ce9cf; --gold:#ffd56b;
+  --glow:0 0 0 2px var(--line),0 10px 30px rgba(5,5,30,.55);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--glass:rgba(24,21,70,.9)}}
+:root[data-theme="dark"]{--glass:rgba(24,21,70,.9)}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;color:var(--ink);font-size:19px;line-height:1.5;overflow-x:hidden;
+  font-family:"M PLUS Rounded 1c","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 18%,rgba(120,150,255,.45),transparent 70%),
+    radial-gradient(ellipse 50% 40% at 8% 25%,rgba(228,81,192,.35),transparent 70%),
+    radial-gradient(ellipse 45% 40% at 95% 60%,rgba(122,216,255,.22),transparent 70%),
+    linear-gradient(180deg,#0b1240 0%,#1a1f5c 45%,#24185a 75%,#0a0a26 100%);
+  background-attachment:fixed;
+}
+.en{font-family:"Fredoka","Trebuchet MS","Arial Rounded MT Bold",sans-serif}
+.deco{font-family:"Cinzel",Georgia,serif;letter-spacing:.18em}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+
+/* background */
+#dome{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7}
+.twinkle{position:fixed;inset:0;z-index:0;pointer-events:none}
+.twinkle i{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff;animation:tw 3s ease-in-out infinite}
+.twinkle b{position:absolute;bottom:-10px;width:6px;height:6px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--magenta);animation:rise linear infinite;opacity:.7}
+@keyframes tw{50%{opacity:.15;transform:scale(.6)}}
+@keyframes rise{to{transform:translateY(-110vh) translateX(30px);opacity:0}}
+
+#app{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:14px 16px 44px}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+
+/* top */
+.top{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.back{border:0;background:var(--glass);border-radius:14px;padding:8px 12px;font-weight:800;box-shadow:var(--glow);font-size:.95rem}
+.top .title{flex:1;font-weight:800;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 12px rgba(245,154,198,.6)}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--glass);border-radius:99px;padding:5px 11px;font-weight:800;font-size:.95rem;box-shadow:var(--glow);white-space:nowrap}
+.chip.score{color:var(--gold)}
+.chip.score.bump{animation:bump .4s}
+.chip.combo{color:var(--pink)}
+.chip.combo.hot{box-shadow:0 0 0 2px var(--magenta),0 0 18px var(--magenta)}
+@keyframes bump{40%{transform:scale(1.18)}}
+.icon{border:0;background:var(--glass);border-radius:50%;width:38px;height:38px;font-size:1rem;box-shadow:var(--glow);flex:none}
+
+/* journey bar */
+.journey{background:var(--glass);border-radius:18px;padding:10px 14px 12px;box-shadow:var(--glow);margin-bottom:12px}
+.journey .lab{display:flex;justify-content:space-between;font-weight:800;font-size:.85rem;color:var(--soft);margin-bottom:6px}
+.journey .lab b{color:var(--gold)}
+.track{position:relative;height:16px;border-radius:99px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px var(--line)}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--magenta),var(--pink),var(--lav),var(--cyan));box-shadow:0 0 14px rgba(228,81,192,.7);transition:width .7s cubic-bezier(.3,1.4,.5,1);min-width:16px}
+.fill::after{content:"★";position:absolute;right:-6px;top:50%;transform:translateY(-52%);color:var(--gold);font-size:22px;text-shadow:0 0 10px var(--gold);animation:spin 3s linear infinite}
+@keyframes spin{to{transform:translateY(-52%) rotate(360deg)}}
+.miles{display:flex;justify-content:space-between;margin-top:6px;font-size:.78rem;font-weight:800;color:var(--soft)}
+.miles span.on{color:var(--ink)}
+
+/* hero */
+.hero{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+.hero h1{margin:0;font-size:1.65rem;line-height:1.15;text-shadow:0 0 16px rgba(228,81,192,.7)}
+.hero .deco{display:block;font-size:.62rem;color:var(--pink);margin-bottom:2px}
+.hero p{margin:3px 0 0;color:var(--soft);font-weight:700;font-size:.9rem}
+.mascot{width:80px;height:92px;flex:none;filter:drop-shadow(0 0 12px rgba(228,81,192,.65))}
+.mascot.jump{animation:jump .6s ease}
+.mascot.hug{animation:hug .7s ease}
+@keyframes jump{30%{transform:translateY(-16px) scale(1.06)}60%{transform:translateY(0) scale(.97)}}
+@keyframes hug{30%{transform:scale(1.12)}60%{transform:scale(.96)}}
+.flame-body{transform-origin:50% 90%;animation:sway 2.6s ease-in-out infinite}
+@keyframes sway{50%{transform:rotate(3deg) scaleY(1.03)}}
+.lvcard{background:var(--glass);border-radius:20px;padding:12px 14px;box-shadow:var(--glow);margin-bottom:14px}
+.lvrow{display:flex;justify-content:space-between;align-items:baseline;font-weight:800}
+.lvrow .t{color:var(--pink)}
+.lvrow .n{color:var(--gold)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;background:rgba(255,255,255,.06);filter:grayscale(1);opacity:.35;border:0}
+.badge.got{filter:none;opacity:1;background:linear-gradient(135deg,rgba(228,81,192,.35),rgba(122,216,255,.25));box-shadow:0 0 12px rgba(245,154,198,.45)}
+
+.units{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.unit{border:2px solid var(--line);background:var(--glass);border-radius:16px;padding:9px 4px;font-weight:800;text-align:center;line-height:1.25}
+.unit small{display:block;font-size:.76rem;color:var(--soft);font-weight:700}
+.unit.on{border-color:var(--pink);box-shadow:0 0 16px rgba(245,154,198,.55);background:linear-gradient(180deg,rgba(228,81,192,.35),var(--glass))}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.group{border:0;text-align:left;border-radius:20px 20px 14px 14px;padding:14px;position:relative;overflow:clip;
+  background:linear-gradient(160deg,rgba(122,216,255,.18),rgba(228,81,192,.18) 60%,rgba(52,40,126,.6)),var(--glass);
+  box-shadow:var(--glow);transition:transform .15s;overflow:hidden}
+.group::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,transparent 49%,rgba(10,12,40,.6) 49%,rgba(10,12,40,.6) 51%,transparent 51%),
+  linear-gradient(0deg,transparent 64%,rgba(10,12,40,.5) 64%,rgba(10,12,40,.5) 66%,transparent 66%);opacity:.5;pointer-events:none}
+.group:active{transform:scale(.97)}
+.group>*{position:relative}
+.group b{display:block;font-size:1.05rem}
+.group .peek{display:block;color:var(--soft);font-size:.8rem;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.group .st{margin-top:6px;font-size:.9rem;font-weight:800;color:var(--gold)}
+.group.next{box-shadow:0 0 0 2px var(--pink),0 0 22px rgba(228,81,192,.7);animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 2px var(--pink),0 0 34px rgba(228,81,192,.95)}}
+.group.next::after{content:"下一關 ✦";position:absolute;top:8px;right:10px;background:var(--magenta);color:#fff;font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:99px}
+
+/* card */
+.card{background:var(--glass);border-radius:26px;padding:22px 20px;box-shadow:var(--glow);position:relative;overflow:hidden;overflow:clip}
+.card::before{content:"";position:absolute;top:0;left:0;width:100%;height:60%;background:radial-gradient(ellipse at center,rgba(245,154,198,.18),transparent 60%);pointer-events:none}
+.card>*{position:relative}
+.orbwrap{display:flex;justify-content:center;align-items:center;gap:14px;margin:4px 0 10px}
+.orb{border:0;width:110px;height:110px;border-radius:50%;font-size:2.6rem;color:#fff;
+  background:radial-gradient(circle at 35% 30%,#ffd0ea,var(--magenta) 55%,#7a2a9a);box-shadow:0 0 0 6px rgba(245,154,198,.25),0 0 40px rgba(228,81,192,.8)}
+.orb.playing{animation:ring 1s ease-out infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(245,154,198,.7),0 0 40px rgba(228,81,192,.8)}100%{box-shadow:0 0 0 26px rgba(245,154,198,0),0 0 40px rgba(228,81,192,.8)}}
+.mini{border:0;width:58px;height:58px;border-radius:50%;font-size:1.4rem;background:var(--glass2);box-shadow:var(--glow)}
+.mini.playing{animation:bump .5s infinite}
+.word{font-size:2.5rem;font-weight:700;text-align:center;line-height:1.1;word-break:break-word;text-shadow:0 0 18px rgba(184,164,255,.7)}
+.posrow{text-align:center;margin-top:6px}
+.pos{display:inline-block;background:rgba(255,213,107,.18);color:var(--gold);border-radius:8px;padding:1px 9px;font-weight:800;font-size:.85rem}
+.zhbox{text-align:center;margin:14px 0 4px;min-height:58px;display:flex;justify-content:center;align-items:center}
+.reveal{border:0;border-radius:99px;padding:13px 26px;font-weight:800;font-size:1.15rem;color:#fff;
+  background:linear-gradient(90deg,var(--magenta),var(--pink));box-shadow:0 5px 0 #8f2a76,0 0 22px rgba(228,81,192,.7);transition:opacity .3s}
+.reveal.wait{opacity:.45;background:var(--glass2);box-shadow:var(--glow);pointer-events:none}
+.reveal.ready{animation:pop .45s}
+.zh{font-size:1.7rem;font-weight:800;color:var(--pink);text-shadow:0 0 14px rgba(245,154,198,.6);animation:pop .45s}
+.more{max-height:0;opacity:0;overflow:hidden;transition:max-height .7s ease,opacity .5s ease}
+.more.show{max-height:1400px;opacity:1}
+.sec{margin-top:16px}
+.sec h3{margin:0 0 8px;font-size:.88rem;color:var(--soft);letter-spacing:.06em}
+.collos{display:flex;flex-direction:column;gap:8px}
+.collo{display:flex;align-items:center;gap:8px;border:0;width:100%;text-align:left;background:rgba(122,216,255,.13);border-radius:14px;padding:9px 12px;box-shadow:inset 0 0 0 1.5px rgba(122,216,255,.35)}
+.collo .en{font-weight:600;font-size:1.08rem;color:var(--cyan)}
+.collo small{color:var(--soft);font-weight:700;margin-left:auto;text-align:right;flex:none;max-width:42%}
+.collo.playing{animation:bump .5s infinite}
+.example{background:rgba(9,13,43,.55);border-radius:16px;padding:14px;font-size:1.18rem;line-height:1.8;box-shadow:inset 0 0 0 1.5px var(--line)}
+.hole{border:0;display:inline-block;min-width:100px;padding:0 10px;margin:0 2px;border-radius:10px;background:rgba(255,213,107,.16);border-bottom:3px solid var(--gold);font-weight:700;color:transparent;position:relative;line-height:1.5;vertical-align:baseline}
+.hole::after{content:"點我 ✦";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.85rem;font-family:"M PLUS Rounded 1c",sans-serif}
+.hole.open{color:var(--pink);background:rgba(228,81,192,.22);border-bottom-color:var(--pink);animation:pop .35s}
+.hole.open::after{content:none}
+.blank{display:inline-block;min-width:90px;border-bottom:3px solid var(--cyan);text-align:center;color:var(--cyan);font-weight:700}
+.blank.filled{color:var(--aqua);border-color:var(--aqua);animation:pop .35s}
+.exzh{margin-top:8px;color:var(--soft);font-size:.95rem;font-weight:700}
+.tipbox{margin-top:12px;background:rgba(226,65,106,.18);color:#ffb3c6;border-radius:12px;padding:8px 12px;font-weight:800;font-size:.95rem}
+.tw{color:var(--cyan);font-weight:700}
+.nc{text-decoration:underline wavy var(--pink);text-underline-offset:5px;text-decoration-thickness:1.5px}
+.say{border:0;border-radius:99px;padding:7px 13px;font-weight:800;background:rgba(122,216,255,.16);color:var(--cyan);font-size:.92rem}
+.say.playing{animation:bump .5s infinite}
+.dots{display:flex;justify-content:center;gap:8px;margin:16px 0}
+.dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.18);transition:.2s}
+.dots i.on{background:var(--pink);width:30px;border-radius:99px;box-shadow:0 0 10px var(--magenta)}
+.dots i.seen{background:var(--gold)}
+.nav{display:flex;gap:10px}
+.hint{flex:1;text-align:center;color:var(--soft);font-weight:700;padding:14px 0}
+.btn{border:0;border-radius:18px;padding:15px 18px;font-weight:800;font-size:1.1rem;transition:transform .1s;flex:1;color:#fff}
+.btn:active{transform:translateY(4px)}
+.btn.ghost{background:var(--glass2);flex:0 0 auto;box-shadow:var(--glow)}
+.btn.go{background:linear-gradient(90deg,var(--magenta),var(--pink));box-shadow:0 5px 0 #8f2a76,0 0 20px rgba(228,81,192,.5)}
+.btn.ok{background:linear-gradient(90deg,#3aa9e0,var(--aqua));color:#08203a;box-shadow:0 5px 0 #1f6f96,0 0 20px rgba(108,233,207,.45)}
+
+/* quiz */
+.wstars{display:flex;justify-content:center;gap:8px;margin-bottom:12px}
+.wstar{display:flex;flex-direction:column;align-items:center;font-size:.7rem;color:var(--soft);font-weight:800;width:58px;text-align:center;line-height:1.2}
+.wstar span{font-size:1.7rem;filter:grayscale(1);opacity:.3;transition:.3s}
+.wstar.half span{filter:none;opacity:.65}
+.wstar.full span{filter:drop-shadow(0 0 8px var(--gold));opacity:1;animation:pop .45s}
+.wstar em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58px}
+.qlabel{display:inline-block;background:rgba(184,164,255,.2);color:var(--lav);font-weight:800;border-radius:99px;padding:4px 12px;font-size:.88rem}
+.qtitle{font-size:1.15rem;font-weight:800;margin:10px 0 12px}
+.sentence{font-size:1.25rem;line-height:1.85;background:rgba(9,13,43,.55);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{border:0;background:var(--glass2);border-radius:18px;padding:14px;font-size:1.2rem;font-weight:700;text-align:center;box-shadow:inset 0 0 0 2px var(--line),0 4px 0 rgba(0,0,0,.3);transition:transform .1s}
+.opt:active{transform:translateY(3px)}
+.opt.right{background:linear-gradient(90deg,rgba(108,233,207,.35),rgba(122,216,255,.3));box-shadow:inset 0 0 0 2px var(--aqua),0 0 20px rgba(108,233,207,.6);animation:pop .4s}
+.opt.soft{background:rgba(245,154,198,.18);box-shadow:inset 0 0 0 2px var(--pink)}
+.opt.dim{opacity:.4}
+.opt:disabled{cursor:default}
+@keyframes pop{50%{transform:scale(1.07)}}
+.fb{display:flex;align-items:center;gap:10px;margin-top:14px;min-height:64px}
+.fb .mascot{width:58px;height:66px}
+.bubble{background:rgba(9,13,43,.7);border-radius:18px;padding:10px 14px;font-weight:800;position:relative;flex:1;box-shadow:inset 0 0 0 2px var(--line)}
+.bubble.good{box-shadow:inset 0 0 0 2px var(--aqua);color:var(--aqua)}
+.bubble.kind{box-shadow:inset 0 0 0 2px var(--pink);color:var(--pink)}
+.bubble small{display:block;font-weight:700;color:var(--soft);margin-top:2px}
+.fly{position:fixed;z-index:60;pointer-events:none;font-weight:800;font-size:1.35rem;color:var(--gold);text-shadow:0 0 10px var(--gold),0 2px 0 #6b3a00;transition:transform .75s cubic-bezier(.5,-.3,.6,1),opacity .75s}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(9,13,43,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:fade .25s}
+.burstcard{text-align:center;padding:26px 30px;border-radius:28px;background:linear-gradient(160deg,rgba(228,81,192,.5),rgba(52,40,126,.95));box-shadow:0 0 0 2px var(--pink),0 0 60px rgba(228,81,192,.8);animation:zoom .5s cubic-bezier(.3,1.6,.5,1)}
+.burstcard .deco{color:var(--gold);font-size:.75rem}
+.burstcard h2{margin:6px 0;font-size:1.9rem;text-shadow:0 0 16px var(--pink)}
+.burstcard p{margin:0;color:var(--soft);font-weight:800}
+@keyframes zoom{from{transform:scale(.4) rotate(-6deg);opacity:0}}
+.done{text-align:center}
+.trophy{font-size:4.5rem;filter:drop-shadow(0 0 20px var(--gold));animation:float 2.4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.done h2{margin:6px 0;font-size:1.6rem;text-shadow:0 0 16px rgba(228,81,192,.7)}
+.bigscore{font-size:2.6rem;font-weight:700;color:var(--gold);text-shadow:0 0 18px rgba(255,213,107,.7)}
+.statrow{display:flex;justify-content:center;gap:10px;margin:14px 0 18px;flex-wrap:wrap}
+.stat{background:var(--glass);border-radius:16px;padding:10px 14px;box-shadow:var(--glow);min-width:92px}
+.stat b{display:block;font-size:1.45rem;color:var(--pink)}
+.stat small{color:var(--soft);font-weight:700}
+.col{display:flex;flex-direction:column;gap:12px}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:65}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 14px);transform:translate(-50%,-260%);background:linear-gradient(90deg,rgba(52,40,126,.97),rgba(120,40,120,.97));box-shadow:0 0 0 2px var(--gold),0 0 30px rgba(255,213,107,.5);border-radius:18px;padding:10px 16px;font-weight:800;z-index:80;transition:transform .45s cubic-bezier(.3,1.6,.5,1);max-width:92vw;display:flex;gap:10px;align-items:center}
+.toast{opacity:0}.toast.show{transform:translate(-50%,0);opacity:1}
+.toast .ic{font-size:1.7rem}
+.toast small{display:block;color:var(--soft);font-weight:700}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg id="dome" aria-hidden="true" preserveAspectRatio="xMidYMin slice"></svg>
+<div class="twinkle" id="twinkle" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<main id="app"></main>
+<script>
+const CARDS = [
+ {id:"civilization",t:"word",w:"civilization",p:"n.",zh:"文明",ex:"The new port and bridges brought <mark>civilization</mark> to the rather isolated island.",tip:"bring A to B 帶給 B 某物；別寫成 conflict"},
+ {id:"isolated",t:"word",w:"isolated",p:"adj.",zh:"偏遠的；隔絕的",ex:"The new port and bridges brought civilization to the rather <mark>isolated</mark> island."},
+ {id:"universal",t:"word",w:"universal",p:"adj.",zh:"普遍的；全人類的",ex:"There seems to be a <mark>universal</mark> fear of death among all people."},
+ {id:"enable",t:"word",w:"enable",p:"v.",zh:"使能夠",ex:"Powerful telescopes <mark>enable</mark> us to observe distant planets.",tip:"enable + 人 + to V"},
+ {id:"observe",t:"word",w:"observe",p:"v.",zh:"觀察",ex:"Powerful telescopes enable us to <mark>observe</mark> distant planets."},
+ {id:"enormous",t:"word",w:"enormous",p:"adj.",zh:"巨大的；廣大的",ex:"Powerful telescopes enable us to observe distant planets, moons, and stars in this <mark>enormous</mark> universe."},
+ {id:"universe",t:"word",w:"universe",p:"n.",zh:"宇宙",ex:"Powerful telescopes enable us to observe distant planets, moons, and stars in this enormous <mark>universe</mark>."},
+ {id:"massage",t:"word",w:"massage",p:"n.",zh:"按摩",ex:"A foot <mark>massage</mark> may seem like torture at the time."},
+ {id:"torture",t:"word",w:"torture",p:"n.",zh:"折磨；痛苦",ex:"A foot massage may seem like <mark>torture</mark> at the time."},
+ {id:"refreshed",t:"word",w:"refreshed",p:"adj.",zh:"恢復精神的",ex:"Afterward you will feel relaxed and <mark>refreshed</mark>.",tip:"修飾「人」的感覺用 -ed"},
+ {id:"generous",t:"word",w:"generous",p:"adj.",zh:"慷慨的；大方的",ex:"It was very <mark>generous</mark> of Jen to give her niece all that jewelry.",tip:"It is + 性格形容詞 + of 人 + to V"},
+ {id:"jewelry",t:"word",w:"jewelry",p:"n.",zh:"珠寶（不可數）",ex:"It was very generous of Jen to give her niece all that expensive <mark>jewelry</mark>.",tip:"拼字 j-e-w-e-l-r-y，不是 juley"},
+ {id:"conflict",t:"word",w:"conflict",p:"n.",zh:"衝突",ex:"They soon came into <mark>conflict</mark> with each other."},
+ {id:"benefit",t:"word",w:"benefit",p:"n.",zh:"益處；好處",ex:"Free education would be of great <mark>benefit</mark> to society."},
+ {id:"slaughter",t:"word",w:"slaughter",p:"n.",zh:"屠殺",ex:"A civil war led to the <mark>slaughter</mark> of thousands of innocent citizens."},
+ {id:"innocent",t:"word",w:"innocent",p:"adj.",zh:"無辜的",ex:"A civil war broke out and led to the slaughter of thousands of <mark>innocent</mark> citizens."},
+ {id:"banish",t:"word",w:"banish",p:"v.",zh:"放逐；驅逐",ex:"The prince was <mark>banished</mark> from the kingdom."},
+ {id:"victim",t:"word",w:"victim",p:"n.",zh:"受害者；災民",ex:"<mark>Victims</mark> of the huge flood are seeking shelter."},
+ {id:"seek",t:"word",w:"seek",p:"v.",zh:"尋求",ex:"Victims are <mark>seeking</mark> shelter in the local school hall."},
+ {id:"shelter",t:"word",w:"shelter",p:"n.",zh:"庇護；避難所",ex:"Victims are seeking <mark>shelter</mark> in the local school hall."},
+ {id:"furious",t:"word",w:"furious",p:"adj.",zh:"盛怒的",ex:"People were <mark>furious</mark> about the government.",tip:"furious about / at / with，不是 for"},
+ {id:"distribute",t:"word",w:"distribute",p:"v.",zh:"分配",ex:"People were furious about the government for not <mark>distributing</mark> funds evenly among schools in the area."},
+ {id:"evenly",t:"word",w:"evenly",p:"adv.",zh:"平均地",ex:"People were furious about the government for not distributing funds <mark>evenly</mark> among schools in the area."},
+ {id:"punish",t:"word",w:"punish",p:"v.",zh:"處罰",ex:"Benjamin was <mark>punished</mark> by his parents for coming home late."},
+ {id:"identity",t:"word",w:"identity",p:"n.",zh:"身分",ex:"It is easy to fall victim to <mark>identity</mark> theft."},
+ {id:"theft",t:"word",w:"theft",p:"n.",zh:"偷竊",ex:"It is easy to fall victim to identity <mark>theft</mark>."},
+ {id:"regardless",t:"phrase",w:"regardless of",p:"片語",zh:"不論；不管",ex:"<mark>Regardless of</mark> race or culture, there seems to be a universal fear of death."},
+ {id:"comeinto",t:"phrase",w:"come into conflict with",p:"片語",zh:"與……發生衝突",ex:"Both nations soon <mark>came into conflict with</mark> each other.",tip:"是 into，不是 in"},
+ {id:"benefitto",t:"phrase",w:"be of benefit to",p:"片語",zh:"對……有好處",ex:"Free education would <mark>be of great benefit to</mark> society.",tip:"對象用 to，不是 in"},
+ {id:"breakout",t:"phrase",w:"break out",p:"片語",zh:"（戰爭、災害）爆發",ex:"A civil war <mark>broke out</mark>."},
+ {id:"banishfrom",t:"phrase",w:"be banished from",p:"片語",zh:"被逐出（某地）",ex:"The prince <mark>was banished from</mark> the kingdom.",tip:"離開用 from，不是 of"},
+ {id:"seekshelter",t:"phrase",w:"seek shelter",p:"片語",zh:"尋求庇護；避難",ex:"Flood victims are <mark>seeking shelter</mark> in the school hall."},
+ {id:"punishfor",t:"phrase",w:"be punished for",p:"片語",zh:"因……被處罰",ex:"Benjamin <mark>was punished</mark> by his parents <mark>for</mark> coming home late.",tip:"by 後接人，for 後接原因"},
+ {id:"feedon",t:"phrase",w:"feed on",p:"片語",zh:"以……為食",ex:"Omnivores can <mark>feed on</mark> both meat and plants.",tip:"是 on，不是 in"},
+ {id:"runout",t:"phrase",w:"run out of",p:"片語",zh:"用盡；耗盡",ex:"The bus <mark>ran out of</mark> gas."},
+ {id:"makeup",t:"phrase",w:"make up for",p:"片語",zh:"彌補；補償",ex:"Her mom bought her new shoes to <mark>make up for</mark> it."},
+ {id:"asaresult",t:"phrase",w:"as a result",p:"片語",zh:"因此；結果",ex:"They made a fire and, <mark>as a result</mark>, were safe from wild beasts."},
+ {id:"safefrom",t:"phrase",w:"safe from",p:"片語",zh:"免於……的危險",ex:"They were <mark>safe from</mark> wild beasts."},
+ {id:"fallvictim",t:"phrase",w:"fall victim to",p:"片語",zh:"成為……的受害者",ex:"It is easy to <mark>fall victim to</mark> identity theft."},
+ {id:"setstage",t:"phrase",w:"set the stage for",p:"片語",zh:"為……奠定基礎",ex:"The smartphone <mark>set the stage for</mark> thousands of apps."}
+];
+
+const LT_CARDS=[
+ {id:"l-promise",t:"word",w:"promise",p:"v.",zh:"答應；承諾",ex:"Tom <mark>promised</mark> his daughter that he would take her to the zoo yesterday.",exZh:"湯姆答應女兒昨天帶她去動物園。"},
+ {id:"l-architect",t:"word",w:"architect",p:"n.",zh:"建築師",ex:"The Louvre Pyramid is designed by the famous <mark>architect</mark> Ieoh Ming Pei.",exZh:"羅浮宮金字塔由著名建築師貝聿銘設計。"},
+ {id:"l-structure",t:"word",w:"structure",p:"n.",zh:"結構",ex:"A good paragraph is usually developed with a nice <mark>structure</mark>, which consists of a topic sentence, three supporting sentences, and a concluding sentence.",exZh:"好的段落通常有漂亮的結構，由主題句、三個支持句和結尾句組成。",tip:"A consist of B：A 由 B 組成"},
+ {id:"l-rank",t:"word",w:"rank",p:"v.",zh:"排名",ex:"According to a report, Finland is <mark>ranked</mark> the happiest country in the world.",exZh:"根據報告，芬蘭被評為世界上最幸福的國家。"},
+ {id:"l-feedback",t:"word",w:"feedback",p:"n.",zh:"回饋（不可數）",ex:"Your advice is always insightful; please give me some <mark>feedback</mark> on this new project.",exZh:"你的建議總是很有見地，請就這個新專案給我一些回饋。",tip:"give feedback on…；不可數，不加 s"},
+ {id:"l-collaborate",t:"word",w:"collaborate",p:"v.",zh:"合作",ex:"We are looking for a new colleague who can <mark>collaborate</mark> with people well.",exZh:"我們在找一位能和別人好好合作的新同事。",tip:"collaborate with 人；collaborate in Ving"},
+ {id:"l-adjustment",t:"word",w:"adjustment",p:"n.",zh:"調整",ex:"Janice made an <mark>adjustment</mark> to the air conditioner so that the room could become cooler.",exZh:"Janice 調整了冷氣，讓房間變涼。",tip:"make an adjustment to N"},
+ {id:"l-route",t:"word",w:"route",p:"n.",zh:"路線",ex:"Since we are not sure about which road to take, let's look at the map and find out the best <mark>route</mark>.",exZh:"既然不確定走哪條路，我們看地圖找出最佳路線吧。"},
+ {id:"l-exploration",t:"word",w:"exploration",p:"n.",zh:"探索",ex:"Since the late 20th century, the <mark>exploration</mark> of Mars has helped scientists learn more about its geology.",exZh:"自 20 世紀末，對火星的探索幫助科學家更了解它的地質。"},
+ {id:"l-unique",t:"word",w:"unique",p:"adj.",zh:"獨一無二的",ex:"Everyone is <mark>unique</mark>, with his own character, talent, and preference.",exZh:"每個人都獨一無二，有自己的性格、天分和喜好。"},
+ {id:"l-stability",t:"word",w:"stability",p:"n.",zh:"穩定",ex:"The spread of COVID-19 leads to new risks to financial <mark>stability</mark>.",exZh:"COVID-19 的擴散為金融穩定帶來新風險。"},
+ {id:"l-material",t:"word",w:"material",p:"n.",zh:"材料",ex:"The artist is good at turning <mark>materials</mark> like wood or stone into beautiful handicrafts.",exZh:"這位藝術家擅長把木頭或石頭等材料變成漂亮的手工藝品。",tip:"當「材料」可數，記得加 s；turn A into B"},
+ {id:"l-construct",t:"word",w:"construct",p:"v.",zh:"建造",ex:"The city government plans to <mark>construct</mark> another highway bridge in the hope of improving traffic flow.",exZh:"市政府計畫興建另一座高速公路橋，希望改善車流。"},
+ {id:"l-reliable",t:"word",w:"reliable",p:"adj.",zh:"可靠的",ex:"Bruce is the most <mark>reliable</mark> person in this company; you can trust him.",exZh:"Bruce 是公司裡最可靠的人，你可以信任他。"},
+ {id:"l-slightly",t:"word",w:"slightly",p:"adv.",zh:"稍微",ex:"I feel <mark>slightly</mark> dizzy. It's not a serious problem, <b class=\"tw\">but</b> I do need to sit down.",exZh:"我覺得有點頭暈，不嚴重，但我真的需要坐下。"},
+ {id:"l-outperform",t:"word",w:"outperform",p:"v.",zh:"勝過",ex:"Jack joined a national bread competition to see if he could <mark>outperform</mark> other bakers.",exZh:"Jack 參加全國麵包比賽，看能不能勝過其他烘焙師。"},
+ {id:"l-capability",t:"word",w:"capability",p:"n.",zh:"能力",ex:"They consider they have superb <mark>capabilities</mark> and want to be in charge of a big company.",exZh:"他們覺得自己能力絕佳，想掌管大公司。"},
+ {id:"l-graduate",t:"word",w:"graduate",p:"n.",zh:"畢業生",ex:"Local <mark>graduates</mark> need to work harder to stand out from those from around the world.",exZh:"本地畢業生必須更努力，才能從世界各地的畢業生中脫穎而出。"},
+ {id:"l-element",t:"word",w:"element",p:"n.",zh:"要素；因素",ex:"Age and experience are not the most important <mark>elements</mark> when it comes to teamwork.",exZh:"說到團隊合作，年齡和經驗不是最重要的因素。"},
+ {id:"l-innovative",t:"word",w:"innovative",p:"adj.",zh:"創新的",ex:"I have been encouraged to provide any <mark>innovative</mark> ideas and constructive criticism.",exZh:"我一直被鼓勵提出任何創新的想法和建設性的批評。"},
+ {id:"l-prioritize",t:"word",w:"prioritize",p:"v.",zh:"排定優先順序",ex:"Mike's friend suggested he write a to-do list and <mark>prioritize</mark> his tasks.",exZh:"Mike 的朋友建議他寫待辦清單並排定任務的優先順序。",tip:"suggest (that) S + (should) VR"},
+ {id:"l-procrastination",t:"word",w:"procrastination",p:"n.",zh:"拖延",ex:"He could get rid of the habit of <mark>procrastination</mark>.",exZh:"他就能戒掉拖延的習慣。"},
+ {id:"l-phubber",t:"word",w:"phubber",p:"n.",zh:"低頭族",ex:"These <mark>phubbers</mark> are addicted to their smartphones.",exZh:"這些低頭族沉迷於智慧型手機。"},
+ {id:"l-refute",t:"word",w:"refute",p:"v.",zh:"反駁；否定",ex:"<b class=\"tw\">Instead of</b> <mark>refuting</mark> the effects of the challenge, they viewed it as an opportunity.",exZh:"他們不否定這項挑戰的影響，反而把它視為一個機會。"},
+ {id:"l-unlike",t:"word",w:"unlike",p:"prep.",zh:"不像；不同於",ex:"<mark>Unlike</mark> previous challenges, Wujec has divided up his teams based on profession this time.",exZh:"不同於以往的挑戰，這次 Wujec 依職業分組。",tip:"besides 除了；regarding 關於；during 在…期間"},
+ {id:"l-whereas",t:"word",w:"whereas",p:"conj.",zh:"然而（轉折）",ex:"They want to be in charge of a big company, <mark>whereas</mark> the truth is that they are not professional enough.",exZh:"他們想掌管大公司，然而事實是他們不夠專業。",tip:"轉折詞，= while"},
+ {id:"l-consistof",t:"phrase",w:"consist of",p:"片語",zh:"由……組成",ex:"Our class <mark>consists of</mark> 40 students.",exZh:"我們班由 40 位學生組成。",tip:"沒有被動，不說 is consisted of"},
+ {id:"l-turninto",t:"phrase",w:"turn A into B",p:"片語",zh:"把 A 變成 B",ex:"The artist is good at <mark>turning</mark> wood <mark>into</mark> beautiful handicrafts.",exZh:"藝術家擅長把木頭變成漂亮的手工藝品。",tip:"= transform / change A into B"},
+ {id:"l-knownas",t:"phrase",w:"be known as",p:"片語",zh:"被稱為",ex:"Jack, <mark>known as</mark> “Baker King,” was capable of making the most delicious bread.",exZh:"被稱為「烘焙王」的 Jack 能做出最美味的麵包。",tip:"known as 被稱為；known for 以…聞名"},
+ {id:"l-capableof",t:"phrase",w:"be capable of Ving",p:"片語",zh:"有能力做……",ex:"Jack didn't take charge of the department until he was <mark>capable of</mark> leading the team.",exZh:"Jack 直到有能力帶領團隊，才接管這個部門。"},
+ {id:"l-lineup",t:"phrase",w:"line up",p:"片語",zh:"排隊",ex:"Customers had to spend more than one hour <mark>lining up</mark>.",exZh:"客人必須花一小時以上排隊。",tip:"spend + 時間 + Ving"},
+ {id:"l-despite",t:"phrase",w:"despite Ving",p:"片語",zh:"儘管……",ex:"<mark>Despite</mark> working very hard in the competition, he failed.",exZh:"儘管在比賽中很努力，他還是失敗了。",tip:"despite 是介系詞，不加 of；= in spite of"},
+ {id:"l-secondlast",t:"phrase",w:"second to last",p:"片語",zh:"倒數第二",ex:"He failed, ranking only <mark>second to last</mark>.",exZh:"他失敗了，只排名倒數第二。"},
+ {id:"l-rollup",t:"phrase",w:"roll up one's sleeves",p:"片語",zh:"捲起袖子（開始行動）",ex:"Jack wasn't distressed; <b class=\"tw\">instead</b>, he quickly <mark>rolled up his sleeves</mark>.",exZh:"Jack 沒有沮喪，反而很快就捲起袖子開始行動。"},
+ {id:"l-dedicate",t:"phrase",w:"dedicate oneself to Ving",p:"片語",zh:"致力於……",ex:"He <mark>dedicated himself to</mark> preparing for the following year's competition.",exZh:"他致力於準備隔年的比賽。",tip:"to 是介系詞，後接 Ving"},
+ {id:"l-relyon",t:"phrase",w:"rely on",p:"片語",zh:"依靠",ex:"He <mark>relied on</mark> trial and error to find out which ingredients worked the best.",exZh:"他靠反覆試驗找出哪些材料效果最好。"},
+ {id:"l-trial",t:"phrase",w:"trial and error",p:"片語",zh:"反覆試驗",ex:"The children's success came from their willingness to engage in <mark>trial and error</mark>.",exZh:"孩子們成功的祕訣是他們願意反覆試驗。"},
+ {id:"l-moveon",t:"phrase",w:"move on to",p:"片語",zh:"換到下一個",ex:"If one recipe was not suitable, he <mark>moved on to</mark> the next.",exZh:"一份食譜不適合，他就換下一個。"},
+ {id:"l-route2",t:"phrase",w:"the route to success",p:"片語",zh:"通往成功的路",ex:"He believed it was the only <mark>route to success</mark>.",exZh:"他相信這是唯一通往成功的路。"},
+ {id:"l-promise2",t:"phrase",w:"make a promise to oneself",p:"片語",zh:"對自己承諾",ex:"He <mark>made a promise to himself</mark> that he would keep himself focused on more experiments.",exZh:"他對自己承諾會持續專注在更多實驗上。"},
+ {id:"l-figureout",t:"phrase",w:"figure out",p:"片語",zh:"想出；弄清楚",ex:"He kept experimenting before <mark>figuring out</mark> the best recipe.",exZh:"在想出最好的食譜之前，他一直做實驗。"},
+ {id:"l-asexpected",t:"phrase",w:"as expected",p:"片語",zh:"正如預期",ex:"One year later, Jack, <mark>as expected</mark>, won the bread competition and came in first.",exZh:"一年後，正如預期，Jack 贏得比賽得到第一名。"},
+ {id:"l-comein",t:"phrase",w:"come in first",p:"片語",zh:"得到第一名",ex:"Jack won the bread competition and <mark>came in first</mark>.",exZh:"Jack 贏得麵包比賽，拿下第一名。"},
+ {id:"l-takecharge",t:"phrase",w:"take charge of",p:"片語",zh:"接管；負責",ex:"Jack didn't <mark>take charge of</mark> the department <b class=\"tw\">until</b> he was capable of leading the team.",exZh:"Jack 直到有能力帶團隊，才接管這個部門。",tip:"not…until… 直到…才…"},
+ {id:"l-incharge",t:"phrase",w:"be in charge of",p:"片語",zh:"掌管；負責",ex:"They want to be <mark>in charge of</mark> a big company.",exZh:"他們想掌管一家大公司。"},
+ {id:"l-settle",t:"phrase",w:"settle for",p:"片語",zh:"勉強接受",ex:"Another reason is that they don't <mark>settle for</mark> lower pay.",exZh:"另一個原因是他們不肯屈就低薪。"},
+ {id:"l-standout",t:"phrase",w:"stand out from",p:"片語",zh:"從……中脫穎而出",ex:"Local graduates need to work harder to <mark>stand out from</mark> those from around the world.",exZh:"本地畢業生必須更努力才能脫穎而出。"},
+ {id:"l-getdown",t:"phrase",w:"get down to",p:"片語",zh:"開始認真做",ex:"It's time we rolled up our sleeves and <mark>got down to</mark> the experiment.",exZh:"該是我們捲起袖子、好好開始做實驗的時候了。",tip:"get down to + N / Ving；It's time + S + Ved"},
+ {id:"l-getrid",t:"phrase",w:"get rid of",p:"片語",zh:"擺脫；戒除",ex:"He could <mark>get rid of</mark> the bad habit of procrastination.",exZh:"他就能戒掉拖延的壞習慣。"},
+ {id:"l-addicted",t:"phrase",w:"be addicted to",p:"片語",zh:"沉迷於",ex:"These phubbers <mark>are addicted to</mark> their smartphones.",exZh:"這些低頭族沉迷於手機。",tip:"to 是介系詞，後接 N / Ving"},
+ {id:"l-cold",t:"phrase",w:"cold comfort",p:"片語",zh:"於事無補的安慰",ex:"The seemingly positive comments could appear to be nothing but <mark>cold comfort</mark>.",exZh:"那些看似正面的評論可能只是於事無補的安慰。"},
+ {id:"l-white",t:"phrase",w:"white lie",p:"片語",zh:"善意的謊言",ex:"Some knew these compliments were simply <mark>white lies</mark>.",exZh:"有些人知道這些讚美只是善意的謊言。"},
+ {id:"l-notuntil",t:"phrase",w:"not … until …",p:"片語",zh:"直到……才……",ex:"The challenge is <mark>not</mark> complete <mark>until</mark> the team places the marshmallow on top.",exZh:"直到隊伍把棉花糖放到頂端，挑戰才算完成。"},
+ {id:"l-overyears",t:"phrase",w:"over the years",p:"片語",zh:"這幾年來",ex:"<mark>Over the years</mark>, the high unemployment rate of college graduates has been an issue worth discussing.",exZh:"這幾年來，大學畢業生高失業率一直是值得探討的議題。",tip:"常搭配現在完成式"}
+];
+const T_CARDS=[
+ {id:"t-latitude",t:"word",w:"latitude",p:"n.",zh:"緯度",ex:"You can find out <span class=\"nc\">where a country is on a world map</span> by looking at its <mark>latitude</mark>.",exZh:"看緯度就能找出國家在世界地圖上的位置。",tip:"latitude 緯度 ↔ longitude 經度"},
+ {id:"t-longitude",t:"word",w:"longitude",p:"n.",zh:"經度",ex:"Lines of <mark>longitude</mark> run from the North Pole to the South Pole.",exZh:"經線從北極延伸到南極。"},
+ {id:"t-extremely",t:"word",w:"extremely",p:"adv.",zh:"極度地；非常",ex:"We were all <mark>extremely</mark> tired after our long hike in the mountains.",exZh:"在山裡長途健行後，我們都非常累。",tip:"≈ extraordinarily, exceedingly, highly, incredibly"},
+ {id:"t-heavenly",t:"word",w:"heavenly",p:"adj.",zh:"天堂般的；極好的",ex:"Fiji is often described by visitors as a <mark>heavenly</mark> place.",exZh:"斐濟常被遊客形容為天堂般的地方。",tip:"名詞 + ly = 形容詞：friendly, costly, orderly, leisurely"},
+ {id:"t-folklore",t:"word",w:"folklore",p:"n.",zh:"民間傳說（不可數）",ex:"Many tales from ancient <mark>folklore</mark> have been the subject of popular Disney movies.",exZh:"許多古代民間傳說成了熱門迪士尼電影的題材。"},
+ {id:"t-rural",t:"word",w:"rural",p:"adj.",zh:"鄉村的",ex:"My grandmother lives in a <mark>rural</mark> area where there are many farms.",exZh:"我祖母住在有許多農場的鄉村地區。",tip:"rural 鄉村 ↔ urban 都市"},
+ {id:"t-urban",t:"word",w:"urban",p:"adj.",zh:"都市的",ex:"Kylie moved to an <mark>urban</mark> area when she was offered a new job.",exZh:"Kylie 得到新工作時搬到了都市。"},
+ {id:"t-broaden",t:"word",w:"broaden",p:"v.",zh:"拓展；加寬",ex:"If you have never visited another country, it's time you <mark>broadened</mark> your horizons.",exZh:"如果你沒出過國，是時候拓展視野了。",tip:"It's time + S + Ved；broad → broaden → breadth"},
+ {id:"t-cliff",t:"word",w:"cliff",p:"n.",zh:"懸崖",ex:"From the edge of the <mark>cliff</mark>, James had a good view of the beach below.",exZh:"從懸崖邊，James 可以清楚俯瞰下方的海灘。"},
+ {id:"t-resource",t:"word",w:"resource",p:"n.",zh:"資源",ex:"People decided to live here because the land has many natural <mark>resources</mark>.",exZh:"人們住在這裡，因為這片土地有豐富的自然資源。",tip:"natural / human resources"},
+ {id:"t-resourceful",t:"word",w:"resourceful",p:"adj.",zh:"足智多謀的",ex:"She is a woman who is energetic and <mark>resourceful</mark>.",exZh:"她是一位精力充沛又足智多謀的女性。"},
+ {id:"t-isolated",t:"word",w:"isolated",p:"adj.",zh:"偏遠的；孤立的",ex:"The South Pole is one of the most <mark>isolated</mark> places on Earth.",exZh:"南極是地球上最偏遠的地方之一。"},
+ {id:"t-sightseeing",t:"word",w:"sightseeing",p:"n.",zh:"觀光",ex:"Our trip to London included a lot of <mark>sightseeing</mark> and theater.",exZh:"我們的倫敦之旅有很多觀光和看劇。",tip:"go sightseeing；a sightseeing tour"},
+ {id:"t-ferry",t:"word",w:"ferry",p:"v. / n.",zh:"接送；渡輪",ex:"Lorna's dad always has to <mark>ferry</mark> her around from place to place.",exZh:"Lorna 的爸爸總要載她到處跑。",tip:"ferry sb around；travel 不能直接接人"},
+ {id:"t-inland",t:"word",w:"inland",p:"adv. / adj.",zh:"向內陸；內陸的",ex:"The tourists were told to move <mark>inland</mark> to avoid the storm at the coast.",exZh:"遊客被告知往內陸移動，躲避海岸的暴風雨。"},
+ {id:"t-steep",t:"word",w:"steep",p:"adj.",zh:"陡峭的；急劇的",ex:"Fred was breathing hard as he walked up the <mark>steep</mark> hill.",exZh:"Fred 爬上陡坡時喘得很厲害。",tip:"steep prices 價格高昂；a steep rise 急劇上升"},
+ {id:"t-awe",t:"word",w:"awe",p:"n.",zh:"敬畏；驚嘆",ex:"We stood in <mark>awe</mark> of the mighty mountains.",exZh:"我們對雄偉的山脈心生敬畏。",tip:"in awe of 對…感到敬畏"},
+ {id:"t-aweinspiring",t:"word",w:"awe-inspiring",p:"adj.",zh:"令人驚嘆的",ex:"The ancient monuments in Egypt are some of the most <mark>awe-inspiring</mark> sights in the world.",exZh:"埃及的古代遺跡是世界上最令人驚嘆的景觀之一。"},
+ {id:"t-glacier",t:"word",w:"glacier",p:"n.",zh:"冰河",ex:"One sign of climate change is <span class=\"nc\">that <mark>glaciers</mark> are melting faster than in the past</span>.",exZh:"氣候變遷的徵兆之一是冰河融化得比過去快。"},
+ {id:"t-abundance",t:"word",w:"abundance",p:"n.",zh:"豐富；大量",ex:"After such a warm summer, we will have an <mark>abundance</mark> of garden vegetables.",exZh:"經過這麼溫暖的夏天，菜園會大豐收。",tip:"an abundance of + 複數 N / 不可數 N"},
+ {id:"t-civilization",t:"word",w:"civilization",p:"n.",zh:"文明",ex:"Children often learn about the ancient Roman and Greek <mark>civilizations</mark> at school.",exZh:"孩子們常在學校學到古羅馬和古希臘文明。"},
+ {id:"t-takein",t:"phrase",w:"take in",p:"片語",zh:"吸收；理解；欣賞",ex:"Alan found it difficult to <mark>take in</mark> all the information that was given to him.",exZh:"Alan 覺得很難吸收所有給他的資訊。",tip:"find it + adj. + to V；take in the sights 欣賞風景"},
+ {id:"t-onbudget",t:"phrase",w:"on a budget",p:"片語",zh:"預算有限",ex:"Norway is an expensive place to visit if you are <mark>on a budget</mark>.",exZh:"如果預算有限，挪威是個昂貴的旅遊地。",tip:"travel on a tight budget（大考題！）"},
+ {id:"t-stretch",t:"phrase",w:"stretch one's budget",p:"片語",zh:"擠出預算",ex:"If you can <mark>stretch your budget</mark> to visit this heavenly place, it will definitely be worth it.",exZh:"如果你能擠出預算去這個天堂般的地方，一定很值得。"},
+ {id:"t-horizons",t:"phrase",w:"broaden one's horizons",p:"片語",zh:"拓展視野",ex:"If you <mark>broaden your horizons</mark>, you will realize <span class=\"nc\">that there is a lot more to this country</span>.",exZh:"如果你拓展視野，會發現這個國家還有更多值得探索。",tip:"大考題！！"},
+ {id:"t-abundanceof",t:"phrase",w:"an abundance of",p:"片語",zh:"大量的；豐富的",ex:"Norway is a high-latitude country with <mark>an abundance of</mark> natural resources.",exZh:"挪威是擁有豐富自然資源的高緯度國家。"},
+ {id:"t-hometo",t:"phrase",w:"be home to",p:"片語",zh:"是……的家園／棲息地",ex:"Alaska <mark>is home to</mark> very few people, but many species of animals.",exZh:"阿拉斯加人口很少，卻是許多動物的棲息地。"},
+ {id:"t-worth",t:"phrase",w:"be worth the expense",p:"片語",zh:"值得花這筆錢",ex:"The tour will make you see why visiting Norway is well <mark>worth the expense</mark>.",exZh:"這趟旅程會讓你明白為什麼造訪挪威物超所值。"}
+];
+
+const COLLO={
+civilization:["ancient civilization|古文明","bring civilization to|為…帶來文明"],
+isolated:["an isolated island|偏遠的島嶼","feel isolated|感到孤立"],
+universal:["a universal fear|普遍的恐懼","a universal truth|普世真理"],
+enable:["enable sb to V|使某人能夠…","enable us to observe|讓我們能觀察"],
+observe:["observe the stars|觀察星星","observe closely|仔細觀察"],
+enormous:["an enormous amount of|大量的…","the enormous universe|廣大的宇宙"],
+universe:["in the universe|在宇宙中","the origin of the universe|宇宙的起源"],
+massage:["a foot massage|腳底按摩","give sb a massage|幫某人按摩"],
+torture:["physical torture|肉體的折磨","be (a) torture|簡直是折磨"],
+refreshed:["feel refreshed|感到神清氣爽","wake up refreshed|醒來精神飽滿"],
+generous:["be generous to sb|對某人大方","It's generous of sb to V|某人真大方"],
+jewelry:["a piece of jewelry|一件珠寶","wear jewelry|戴首飾"],
+conflict:["come into conflict with|與…起衝突","resolve a conflict|解決衝突"],
+benefit:["be of benefit to|對…有好處","benefit from|從…獲益"],
+slaughter:["the slaughter of|對…的屠殺","mass slaughter|大屠殺"],
+innocent:["innocent citizens|無辜的人民","be innocent of|沒有犯…"],
+banish:["be banished from|被逐出…","banish sb to|把某人放逐到…"],
+victim:["fall victim to|成為…的受害者","flood victims|水災災民"],
+seek:["seek shelter|尋求庇護","seek help|尋求幫助"],
+shelter:["seek shelter|避難","provide shelter for|為…提供庇護"],
+furious:["be furious about / at / with|對…很生氣","a furious argument|激烈的爭吵"],
+distribute:["distribute A among / to B|把 A 分配給 B","distribute funds|分配資金"],
+evenly:["distribute evenly|平均分配","evenly matched|勢均力敵"],
+punish:["be punished for|因…被罰","punish sb for Ving|因…處罰某人"],
+identity:["identity theft|身分盜用","an identity card|身分證"],
+theft:["identity theft|身分盜用","car theft|汽車竊盜"],
+"l-promise":["promise sb that…|答應某人…","keep a promise|遵守承諾"],
+"l-architect":["a famous architect|知名建築師","a landscape architect|景觀設計師"],
+"l-structure":["sentence structure|句子結構","social structure|社會結構"],
+"l-rank":["be ranked + 名次|被排名為…","rank first|排名第一"],
+"l-feedback":["give feedback on|對…給回饋","positive feedback|正面回饋"],
+"l-collaborate":["collaborate with sb|和某人合作","collaborate in Ving|合作做…"],
+"l-adjustment":["make an adjustment to|對…做調整","minor adjustments|小小的調整"],
+"l-route":["the best route|最佳路線","the route to success|成功之路"],
+"l-exploration":["space exploration|太空探索","the exploration of Mars|火星探索"],
+"l-unique":["be unique to|為…所獨有","a unique character|獨特的個性"],
+"l-stability":["financial stability|金融穩定","political stability|政治穩定"],
+"l-material":["raw materials|原料","building materials|建材"],
+"l-construct":["construct a bridge|建造橋梁","construct a sentence|造句"],
+"l-reliable":["a reliable person|可靠的人","reliable information|可靠的資訊"],
+"l-slightly":["slightly dizzy|有點頭暈","slightly different|稍微不同"],
+"l-outperform":["outperform others|勝過別人","outperform expectations|超出預期"],
+"l-capability":["have the capability to V|有能力做…","beyond one's capabilities|超出能力範圍"],
+"l-graduate":["college graduates|大學畢業生","a graduate of + 學校|…的畢業生"],
+"l-element":["an important element|重要的因素","the element of surprise|驚喜的元素"],
+"l-innovative":["innovative ideas|創新的點子","innovative design|創新的設計"],
+"l-prioritize":["prioritize tasks|排定任務的優先順序","prioritize safety|以安全為優先"],
+"l-procrastination":["the habit of procrastination|拖延的習慣","avoid procrastination|避免拖延"],
+"l-phubber":["be a phubber|當低頭族","phubbers at the table|飯桌上的低頭族"],
+"l-refute":["refute a claim|反駁說法","refute the effects of|否定…的影響"],
+"l-unlike":["unlike + N|不像…","unlike previous…|不同於以往的…"],
+"l-whereas":["A, whereas B|A；然而 B","= while（轉折）|兩者對比"],
+"t-latitude":["high / low latitude|高／低緯度","lines of latitude|緯線"],
+"t-longitude":["lines of longitude|經線","latitude and longitude|經緯度"],
+"t-extremely":["extremely tired|極度疲倦","extremely important|極其重要"],
+"t-heavenly":["a heavenly place|天堂般的地方","heavenly food|美味無比的食物"],
+"t-folklore":["ancient folklore|古代民間傳說","folklore and mythology|民間傳說與神話"],
+"t-rural":["a rural area|鄉村地區","a rural village|鄉下村莊"],
+"t-urban":["an urban area|都市地區","urban planning|都市規劃"],
+"t-broaden":["broaden one's horizons|拓展視野","broaden one's knowledge|增廣知識"],
+"t-cliff":["the edge of a cliff|懸崖邊","steep cliffs|陡峭的懸崖"],
+"t-resource":["natural resources|自然資源","human resources|人力資源"],
+"t-resourceful":["a resourceful person|足智多謀的人","energetic and resourceful|精力充沛又機靈"],
+"t-isolated":["an isolated place|偏遠的地方","socially isolated|社交孤立"],
+"t-sightseeing":["go sightseeing|去觀光","a sightseeing tour|觀光行程"],
+"t-ferry":["ferry sb around|到處接送某人","take a ferry|搭渡輪"],
+"t-inland":["move inland|往內陸移動","inland areas|內陸地區"],
+"t-steep":["a steep hill|陡坡","steep prices|高昂的價格"],
+"t-awe":["in awe of|對…感到敬畏","a sense of awe|敬畏感"],
+"t-aweinspiring":["awe-inspiring sights|令人驚嘆的景觀","an awe-inspiring view|壯觀的景色"],
+"t-glacier":["melting glaciers|融化中的冰河","a glacier national park|冰河國家公園"],
+"t-abundance":["an abundance of|大量的…","in abundance|充裕地"],
+"t-civilization":["ancient civilizations|古代文明","Western civilization|西方文明"]
+};
+
+
+const UNITS=[
+ {k:"u3",name:"Unit 3",sub:"普羅米修斯",cards:CARDS},
+ {k:"lt",name:"LT302",sub:"團隊合作",cards:LT_CARDS},
+ {k:"t4",name:"Test 04",sub:"旅行與地理",cards:T_CARDS}
+];
+UNITS.forEach(u=>{u.groups=[];for(let i=0;i<u.cards.length;i+=5)u.groups.push(u.cards.slice(i,i+5));});
+const TITLES=["見習魔法生","星光學徒","月光騎士","彩窗魔導士","銀河守護者","傳說魔法師"];
+const LV=1000;
+const BADGES=[
+ {id:"first",ic:"🎀",n:"初次過關",d:"完成第一組"},
+ {id:"perfect",ic:"💎",n:"完美魔法",d:"一組全部一次答對"},
+ {id:"c10",ic:"✨",n:"十連擊",d:"連續答對 10 題"},
+ {id:"c25",ic:"🌠",n:"流星連擊",d:"連續答對 25 題"},
+ {id:"brave",ic:"💪",n:"勇氣之心",d:"勇敢嘗試 10 次"},
+ {id:"ear",ic:"🎧",n:"認真聆聽",d:"聽發音 50 次"},
+ {id:"unit",ic:"🏰",n:"城堡攻略",d:"完成一整個單元"},
+ {id:"s5k",ic:"👑",n:"五千魔力",d:"累積 5000 分"},
+ {id:"all",ic:"🌌",n:"星窗傳說",d:"三個單元全部過關"}
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const strip=t=>t.replace(/<[^>]+>/g,"");
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;};
+const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const cleanEx=c=>c.ex.replace(/<span class="nc">|<\/span>/g,"");
+const answerOf=c=>{const m=[...c.ex.matchAll(/<mark>(.*?)<\/mark>/g)].map(x=>strip(x[1]));return m.length?m.join(" … "):c.w;};
+const sayWord=c=>c.w.replace(/…/g," ").replace(/\bsb\b/g,"somebody").replace(/\bVing\b/g,"");
+const collosOf=c=>COLLO[c.id]||(c.tip?[c.tip+"|"]:[]);
+const gid=(u,i)=>u.k+"-"+i;
+
+/* ---------- state ---------- */
+const KEY="eng-magic-window-v1";
+let S={unit:"u3",score:0,cleared:{},bestCombo:0,brave:0,listens:0,badges:{},muted:false};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+let combo=0, shownScore=S.score;
+
+/* ---------- background: stained-glass dome + city ---------- */
+(function(){
+ const svg=$("#dome"),W=400,H=800,cx=200,cy=-60;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+ let h="";
+ const panes=["#7ad8ff","#e451c0","#b8a4ff","#f59ac6","#6c8cff","#ffd56b"];
+ for(let i=0;i<40;i++){const x=Math.random()*W,y=Math.random()*H*.75,w=20+Math.random()*60,hh=20+Math.random()*60;
+   h+=`<rect x="${x}" y="${y}" width="${w}" height="${hh}" fill="${panes[i%panes.length]}" opacity="${.05+Math.random()*.08}"/>`;}
+ for(let i=0;i<26;i++){const x=i*16+Math.random()*6,bh=60+Math.random()*190;
+   h+=`<rect x="${x}" y="${H-bh}" width="${10+Math.random()*10}" height="${bh}" fill="#6c8cff" opacity=".13"/>`;
+   for(let k=0;k<bh/14;k++)if(Math.random()<.35)h+=`<rect x="${x+3}" y="${H-bh+6+k*14}" width="3" height="4" fill="#cfe6ff" opacity=".35"/>`;}
+ for(let r=140;r<1100;r+=150)h+=`<ellipse cx="${cx}" cy="${cy}" rx="${r*1.15}" ry="${r}" fill="none" stroke="#080a24" stroke-width="7" opacity=".85"/>`;
+ for(let i=-6;i<=6;i++){const ex=cx+i*95;h+=`<path d="M${cx} ${cy} Q ${cx+i*30} ${H*.45} ${ex} ${H+40}" fill="none" stroke="#080a24" stroke-width="${i===0?9:7}" opacity=".85"/>`;}
+ svg.innerHTML=h;
+ const tw=$("#twinkle");let t="";
+ for(let i=0;i<46;i++)t+=`<i style="left:${Math.random()*100}%;top:${Math.random()*70}%;animation-delay:${Math.random()*3}s"></i>`;
+ for(let i=0;i<10;i++)t+=`<b style="left:${Math.random()*100}%;animation-duration:${9+Math.random()*10}s;animation-delay:${-Math.random()*15}s"></b>`;
+ tw.innerHTML=t;
+})();
+
+/* ---------- sound ---------- */
+let actx;
+function ac(){if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C();}if(actx.state==="suspended")actx.resume();return actx;}
+function tone(f,d,type="sine",v=.11,delay=0){if(S.muted)return;const c=ac();if(!c)return;const o=c.createOscillator(),g=c.createGain(),t=c.currentTime+delay;
+ o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.05);}
+const SFX={
+ tap:()=>tone(900,.05,"sine",.06),
+ sparkle:()=>[1319,1568,2093].forEach((f,i)=>tone(f,.14,"sine",.07,i*.05)),
+ right:()=>[784,988,1319].forEach((f,i)=>tone(f,.16,"triangle",.1,i*.07)),
+ kind:()=>{tone(523,.18,"sine",.07);tone(659,.22,"sine",.07,.12)},
+ star:()=>[988,1319,1760,2093].forEach((f,i)=>tone(f,.18,"sine",.09,i*.07)),
+ burst:()=>[523,659,784,1047,1319,1568,2093].forEach((f,i)=>tone(f,.22,"triangle",.1,i*.06)),
+ win:()=>[523,659,784,1047,784,1047,1319,1568].forEach((f,i)=>tone(f,.24,"triangle",.1,i*.1))
+};
+
+/* ---------- speech ---------- */
+let voice=null;
+function pickVoice(){if(!("speechSynthesis" in window))return;const vs=speechSynthesis.getVoices();
+ voice=vs.find(v=>/en[-_]US/i.test(v.lang)&&/Samantha|Google|Jenny|Aria|Ava/i.test(v.name))||vs.find(v=>/en[-_]US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null;}
+if("speechSynthesis" in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice;}
+function speak(text,rate=.85,btn,onend){
+ if(!("speechSynthesis" in window)){toast("🙈","這個瀏覽器沒有語音功能");onend&&onend();return;}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(strip(text));u.lang="en-US";u.rate=rate;if(voice)u.voice=voice;
+ if(btn)btn.classList.add("playing");
+ let fired=false;const end=()=>{if(btn)btn.classList.remove("playing");if(!fired){fired=true;onend&&onend();}};
+ u.onend=end;u.onerror=end;speechSynthesis.speak(u);
+ S.listens++;save();checkBadges();
+}
+
+/* ---------- fx ---------- */
+const cv=$("#fx"),cx=cv.getContext("2d");let parts=[],raf=null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function resize(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+addEventListener("resize",resize);resize();
+const COLS=["#f59ac6","#e451c0","#ffd56b","#7ad8ff","#b8a4ff","#ffffff"];
+function burst(x,y,n=24,pow=1){if(reduce)return;for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=(2+Math.random()*4.5)*pow;
+ parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2.5,r:2.5+Math.random()*3.5,c:COLS[i%COLS.length],l:55+Math.random()*35,s:Math.random()<.6,rot:Math.random()*6});}if(!raf)loop();}
+function loop(){cx.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.l>0);
+ for(const p of parts){p.vy+=.12;p.x+=p.vx;p.y+=p.vy;p.vx*=.98;p.l--;p.rot+=.12;cx.save();cx.globalAlpha=Math.min(1,p.l/25);cx.fillStyle=p.c;cx.shadowColor=p.c;cx.shadowBlur=8;cx.translate(p.x,p.y);cx.rotate(p.rot);
+  if(p.s){cx.beginPath();for(let i=0;i<8;i++){const rr=i%2?p.r*.4:p.r*1.6,a=i*Math.PI/4;cx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}cx.fill();}else{cx.beginPath();cx.arc(0,0,p.r,0,Math.PI*2);cx.fill();}cx.restore();}
+ raf=parts.length?requestAnimationFrame(loop):(cx.clearRect(0,0,innerWidth,innerHeight),null);}
+function rain(n=7){for(let i=0;i<n;i++)setTimeout(()=>burst(Math.random()*innerWidth,innerHeight*(.15+Math.random()*.3),26,1.2),i*120);}
+let tq=[],ton=false;
+function toast(ic,t,sub=""){tq.push({ic,t,sub});if(!ton)nextToast();}
+function nextToast(){const x=tq.shift();if(!x){ton=false;return;}ton=true;const el=$("#toast");
+ el.innerHTML=`<span class="ic">${x.ic}</span><div>${x.t}${x.sub?`<small>${x.sub}</small>`:""}</div>`;el.classList.add("show");
+ setTimeout(()=>{el.classList.remove("show");setTimeout(nextToast,400);},2200);}
+function overlay(deco,title,sub,ms=1500){const o=document.createElement("div");o.className="overlay";
+ o.innerHTML=`<div class="burstcard"><div class="deco">${deco}</div><h2>${title}</h2><p>${sub}</p></div>`;document.body.appendChild(o);
+ o.onclick=()=>o.remove();setTimeout(()=>o.remove(),ms);}
+
+/* ---------- score ---------- */
+const level=s=>Math.floor(s/LV)+1;
+function renderScore(){const el=$("#scoreChip");if(el)el.textContent="💎 "+shownScore.toLocaleString();}
+function countUp(){const target=S.score,start=shownScore,t0=performance.now();
+ const step=t=>{const k=Math.min(1,(t-t0)/600);shownScore=Math.round(start+(target-start)*k);renderScore();if(k<1)requestAnimationFrame(step);};requestAnimationFrame(step);
+ const el=$("#scoreChip");if(el){el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");}}
+function addScore(n,fromEl,label){
+ const before=level(S.score);S.score+=n;save();
+ const chip=$("#scoreChip");
+ if(fromEl&&chip&&!reduce){const a=fromEl.getBoundingClientRect(),b=chip.getBoundingClientRect();
+  const f=document.createElement("div");f.className="fly en";f.textContent=label||("+"+n);
+  f.style.left=(a.left+a.width/2-24)+"px";f.style.top=(a.top+a.height/2-14)+"px";document.body.appendChild(f);
+  requestAnimationFrame(()=>{f.style.transform=`translate(${b.left-a.left-a.width/2+30}px,${b.top-a.top-a.height/2+10}px) scale(.7)`;f.style.opacity=".2";});
+  setTimeout(()=>{f.remove();countUp();},760);
+ }else countUp();
+ const after=level(S.score);
+ if(after>before)setTimeout(()=>{SFX.win();rain(9);overlay("LEVEL UP",`Lv.${after}　${TITLES[Math.min(after-1,TITLES.length-1)]}`,"魔力又變強了！",2000);},800);
+ checkBadges();
+}
+function giveBadge(id){if(S.badges[id])return;S.badges[id]=Date.now();save();const b=BADGES.find(x=>x.id===id);
+ setTimeout(()=>{SFX.star();toast(b.ic,"獲得徽章："+b.n,b.d);},500);}
+function checkBadges(){
+ if(S.brave>=10)giveBadge("brave");if(S.listens>=50)giveBadge("ear");if(S.score>=5000)giveBadge("s5k");
+ if(S.bestCombo>=10)giveBadge("c10");if(S.bestCombo>=25)giveBadge("c25");
+ if(Object.keys(S.cleared).length>=1)giveBadge("first");
+ const unitDone=u=>u.groups.every((_,i)=>S.cleared[gid(u,i)]);
+ if(UNITS.some(unitDone))giveBadge("unit");if(UNITS.every(unitDone))giveBadge("all");
+}
+
+/* mascot: original pink magic flame with a ribbon */
+function mascot(mood="happy",cls=""){
+ const mouth=mood==="wow"?'<ellipse cx="50" cy="68" rx="5" ry="6" fill="#5a1a3a"/>'
+   :mood==="kind"?'<path d="M44 66 q6 4 12 0" stroke="#5a1a3a" stroke-width="3" fill="none" stroke-linecap="round"/>'
+   :'<path d="M42 64 q8 9 16 0" stroke="#5a1a3a" stroke-width="3" fill="#ff8fb5" stroke-linecap="round"/>';
+ const eyes=mood==="happy"||mood==="wow"
+   ?'<path d="M36 54 q4 -6 8 0" stroke="#5a1a3a" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M56 54 q4 -6 8 0" stroke="#5a1a3a" stroke-width="3.2" fill="none" stroke-linecap="round"/>'
+   :'<circle cx="40" cy="54" r="4.4" fill="#5a1a3a"/><circle cx="60" cy="54" r="4.4" fill="#5a1a3a"/><circle cx="41.6" cy="52.4" r="1.5" fill="#fff"/><circle cx="61.6" cy="52.4" r="1.5" fill="#fff"/>';
+ return `<svg class="mascot ${cls}" viewBox="0 0 100 116" aria-hidden="true"><g class="flame-body">
+  <path d="M50 10 C62 28 84 38 84 70 C84 94 68 110 50 110 C32 110 16 94 16 70 C16 52 28 44 32 30 C38 40 42 42 44 34 C46 26 46 20 50 10Z" fill="#e451c0"/>
+  <path d="M50 40 C58 52 72 60 72 78 C72 94 62 102 50 102 C38 102 28 94 28 78 C28 66 36 60 40 52 C44 58 48 54 50 40Z" fill="#f9b8d8"/>
+  <path d="M50 18 L34 8 L36 26Z M50 18 L66 8 L64 26Z" fill="#e2416a"/><circle cx="50" cy="18" r="5" fill="#ff6b8e"/>
+  ${eyes}${mouth}<ellipse cx="32" cy="64" rx="5" ry="3" fill="#ff9ec4"/><ellipse cx="68" cy="64" rx="5" ry="3" fill="#ff9ec4"/>
+  <path d="M80 30 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#ffd56b"/></g></svg>`;
+}
+
+/* ---------- shared UI ---------- */
+let unit=UNITS.find(u=>u.k===S.unit)||UNITS[0], gi=0, li=0, phase={}, holeSeen=new Set(), Qz=null;
+function topbar(title,back){
+ return `<div class="top">${back?`<button class="back" id="backBtn">← 關卡</button>`:""}
+  <div class="title">${title}</div>
+  <span class="chip combo ${combo>=5?"hot":""}" id="comboChip">✨ ${combo}</span>
+  <span class="chip score en" id="scoreChip">💎 ${shownScore.toLocaleString()}</span>
+  <button class="icon" id="muteBtn" aria-label="音效開關">${S.muted?"🔕":"🔔"}</button></div>`;
+}
+function bindTop(){
+ const b=$("#backBtn");if(b)b.onclick=()=>{SFX.tap();if("speechSynthesis" in window)speechSynthesis.cancel();home();};
+ $("#muteBtn").onclick=()=>{S.muted=!S.muted;save();$("#muteBtn").textContent=S.muted?"🔕":"🔔";};
+}
+function journeyPct(){
+ const g=unit.groups[gi],n=g.length;
+ const learned=g.filter((_,i)=>(phase[i]||0)>=1).length;
+ const mastered=Qz?Qz.done.size:0;
+ return Math.round(learned/n*45+mastered/n*55);
+}
+function journey(){
+ const p=journeyPct();
+ return `<div class="journey"><div class="lab"><span>✦ 過關進度</span><b id="jpct">${p}%</b></div>
+  <div class="track"><div class="fill" id="jfill" style="width:${p}%"></div></div>
+  <div class="miles"><span class="${p>0?"on":""}">🎧 聽單字</span><span class="${p>=45?"on":""}">✏️ 魔法測驗</span><span class="${p>=100?"on":""}">🏆 過關</span></div></div>`;
+}
+function updJourney(){const p=journeyPct(),f=$("#jfill"),t=$("#jpct");if(f)f.style.width=p+"%";if(t)t.textContent=p+"%";}
+
+/* ---------- home ---------- */
+function home(){
+ Qz=null;
+ const lv=level(S.score),into=S.score%LV;
+ const doneN=unit.groups.filter((_,i)=>S.cleared[gid(unit,i)]).length;
+ const nextIdx=unit.groups.findIndex((_,i)=>!S.cleared[gid(unit,i)]);
+ app.innerHTML=`<div class="fade">${topbar("")}
+  <div class="hero">${mascot("happy")}<div><span class="deco">MAGIA ✦ VERBA</span><h1>星窗魔法單字</h1><p>一次只學 5 個字・先聽再看・答錯也有分</p></div></div>
+  <div class="lvcard"><div class="lvrow"><span class="t">Lv.${lv}　${TITLES[Math.min(lv-1,TITLES.length-1)]}</span><span class="n en">${into} / ${LV}</span></div>
+   <div class="track" style="margin-top:8px"><div class="fill" style="width:${into/LV*100}%"></div></div>
+   <div class="badges">${BADGES.map(b=>`<button class="badge ${S.badges[b.id]?"got":""}" data-b="${b.id}" aria-label="${b.n}">${b.ic}</button>`).join("")}</div></div>
+  <div class="units">${UNITS.map(u=>`<button class="unit ${u===unit?"on":""}" data-k="${u.k}">${u.name}<small>${u.sub}</small></button>`).join("")}</div>
+  <div class="journey"><div class="lab"><span>🏰 ${unit.name} 過關進度</span><b>${doneN} / ${unit.groups.length}</b></div>
+   <div class="track"><div class="fill" style="width:${doneN/unit.groups.length*100}%"></div></div></div>
+  <div class="groups">${unit.groups.map((g,i)=>{const c=S.cleared[gid(unit,i)];
+    return `<button class="group ${i===nextIdx?"next":""}" data-i="${i}"><b>第 ${i+1} 關</b><span class="peek en">${g.map(c=>c.w).join(" · ")}</span><div class="st">${c===2?"🏆 💎 完美過關":c?"🏆 已過關":"✦ 挑戰"}</div></button>`}).join("")}</div></div>`;
+ bindTop();
+ app.querySelectorAll(".unit").forEach(b=>b.onclick=()=>{SFX.tap();unit=UNITS.find(u=>u.k===b.dataset.k);S.unit=unit.k;save();home();});
+ app.querySelectorAll(".group").forEach(b=>b.onclick=()=>{SFX.sparkle();gi=+b.dataset.i;li=0;phase={};holeSeen=new Set();learn();});
+ app.querySelectorAll(".badge").forEach(b=>b.onclick=()=>{const x=BADGES.find(y=>y.id===b.dataset.b);toast(x.ic,x.n+(S.badges[x.id]?"　✓ 已獲得":""),x.d);});
+ scrollTo(0,0);
+}
+
+/* ---------- learn: sound first, then Chinese ---------- */
+function learn(){
+ const g=unit.groups[gi],c=g[li],ph=phase[li]||0;
+ const holes=cleanEx(c).replace(/<mark>(.*?)<\/mark>/g,(m,t)=>`<button class="hole en" aria-label="點一下看答案">${t}</button>`);
+ const collos=collosOf(c);
+ app.innerHTML=`<div class="fade">${topbar(`${unit.name}・第 ${gi+1} 關`,true)}${journey()}
+  <div class="card">
+   <div class="orbwrap"><button class="orb" id="orb" aria-label="播放發音">🔊</button><button class="mini" id="slow" aria-label="慢速">🐢</button></div>
+   <div class="word en">${c.w}</div><div class="posrow"><span class="pos">${c.p}</span></div>
+   <div class="zhbox" id="zhBox">${ph>=1?`<div class="zh">${c.zh}</div>`:`<button class="reveal wait" id="reveal">🎧 先聽發音…</button>`}</div>
+   <div class="more ${ph>=1?"show":""}" id="more">
+    ${collos.length?`<div class="sec"><h3>🧩 搭配詞 COLLOCATIONS</h3><div class="collos">${collos.map(x=>{const [e,z]=x.split("|");
+      return `<button class="collo" data-say="${esc(e)}"><span>🔊</span><span class="en">${e}</span><small>${z||""}</small></button>`}).join("")}</div></div>`:""}
+    <div class="sec"><h3>📝 例句・先猜猜空格</h3><div class="example en">${holes}</div>
+     ${c.exZh?`<div class="exzh">${c.exZh}</div>`:""}
+     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="say" id="se">🔊 念例句</button><button class="say" id="sse">🐢 慢慢念</button></div></div>
+    ${c.tip&&COLLO[c.id]?`<div class="tipbox">💡 ${c.tip}</div>`:""}
+   </div>
+  </div>
+  <div class="dots">${g.map((_,i)=>`<i class="${i===li?"on":(phase[i]||0)>=1?"seen":""}"></i>`).join("")}</div>
+  <div class="nav" id="nav"></div></div>`;
+ bindTop();
+ const nav=()=>{const p=phase[li]||0;
+  $("#nav").innerHTML=`${li>0?`<button class="btn ghost" id="prev">◀</button>`:""}${p<1?`<div class="hint">聽完發音，揭曉中文 ✦</div>`:li<g.length-1?`<button class="btn go" id="next">下一個字 ▶</button>`:`<button class="btn ok" id="toQuiz">開始魔法測驗 ✨</button>`}`;
+  const pv=$("#prev");if(pv)pv.onclick=()=>{SFX.tap();li--;learn();};
+  const nx=$("#next");if(nx)nx.onclick=()=>{SFX.tap();li++;learn();};
+  const q=$("#toQuiz");if(q)q.onclick=()=>{SFX.sparkle();startQuiz();};
+ };nav();
+ const ready=()=>{const r=$("#reveal");if(r&&r.classList.contains("wait")){r.classList.remove("wait");r.classList.add("ready");r.textContent="✨ 揭曉中文";SFX.tap();}};
+ const orb=$("#orb");
+ orb.onclick=()=>speak(sayWord(c),.85,orb,ready);
+ $("#slow").onclick=e=>speak(sayWord(c),.55,e.currentTarget,ready);
+ const rv=$("#reveal");
+ if(rv)rv.onclick=()=>{
+  phase[li]=1;const r=rv.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2,26);SFX.sparkle();
+  $("#zhBox").innerHTML=`<div class="zh">${c.zh}</div>`;$("#more").classList.add("show");
+  addScore(10,$("#zhBox"));updJourney();nav();
+  app.querySelectorAll(".dots i")[li].className="on";
+ };
+ const reveal=e=>{let opened=false;app.querySelectorAll(".hole").forEach(h=>{if(!h.classList.contains("open")){h.classList.add("open");opened=true;}});
+  if(opened){SFX.sparkle();if(!holeSeen.has(c.id)){holeSeen.add(c.id);const t=(e&&e.currentTarget)||app.querySelector(".hole");addScore(10,t);const r=t.getBoundingClientRect();burst(r.left+r.width/2,r.top,16,.8);}}};
+ app.querySelectorAll(".hole").forEach(h=>h.onclick=reveal);
+ $("#se").onclick=e=>{const b=e.currentTarget;reveal();speak(c.ex,.85,b);};
+ $("#sse").onclick=e=>{const b=e.currentTarget;reveal();speak(c.ex,.6,b);};
+ app.querySelectorAll(".collo").forEach(b=>b.onclick=()=>speak(b.dataset.say.replace(/\bsb\b/g,"somebody").replace(/\+.*$/,"").replace(/=.*$/,""),.85,b));
+ if(ph<1){setTimeout(()=>speak(sayWord(c),.85,orb,ready),350);setTimeout(ready,3500);}
+ scrollTo(0,0);
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(){
+ const g=unit.groups[gi];
+ const L=shuffle(g).map(c=>({c,t:"listen"})),F=shuffle(g).map(c=>({c,t:"fill"}));
+ Qz={g,run:{},done:new Set(),queue:[...L,...F],tries:0,right:0,gain:0,total:g.length,since:0};
+ nextQ();
+}
+function distractors(c,key,n=3){
+ let pool=Qz.g.filter(x=>x.id!==c.id);
+ if(pool.length<n)pool=pool.concat(shuffle(unit.cards.filter(x=>x.id!==c.id&&!pool.includes(x))).slice(0,n-pool.length));
+ return [...new Set(shuffle(pool).map(key).filter(v=>v!==key(c)))].slice(0,n);
+}
+function nextQ(){
+ while(Qz.queue.length&&Qz.done.has(Qz.queue[0].c.id))Qz.queue.shift();
+ if(!Qz.queue.length){finish();return;}
+ Qz.cur=Qz.queue.shift();renderQ();
+}
+function wordStars(){
+ return `<div class="wstars" id="wstars">${Qz.g.map(c=>{const st=Qz.done.has(c.id)?"full":(Qz.run[c.id]||0)>=1?"half":"";
+  return `<div class="wstar ${st}"><span>⭐</span><em class="en">${c.w}</em></div>`}).join("")}</div>`;
+}
+function renderQ(){
+ const {c,t}=Qz.cur;
+ const key=t==="listen"?(x=>x.zh):answerOf;
+ const opts=shuffle([key(c),...distractors(c,key)]);
+ const body=t==="listen"
+  ?`<span class="qlabel">👂 聽音選意</span><div class="qtitle">聽聽看，這是什麼意思？</div>
+    <div class="orbwrap"><button class="orb" id="play" aria-label="播放">🔊</button><button class="mini" id="playSlow" aria-label="慢速">🐢</button></div>`
+  :`<span class="qlabel">✏️ 例句填空</span><div class="qtitle">選出空格裡的字</div>
+    <div class="sentence en">${cleanEx(c).replace(/<mark>(.*?)<\/mark>/g,'<span class="blank">？</span>')}</div>${c.exZh?`<div class="exzh" style="margin:-4px 0 12px">💭 ${c.exZh}</div>`:""}`;
+ app.innerHTML=`<div class="fade">${topbar(`${unit.name}・第 ${gi+1} 關`,true)}${journey()}${wordStars()}
+  <div class="card">${body}<div class="opts">${opts.map(o=>`<button class="opt ${t==="fill"?"en":""}">${o}</button>`).join("")}</div>
+  <div class="fb" id="fb"></div></div></div>`;
+ bindTop();
+ if(t==="listen"){
+  $("#play").onclick=e=>speak(sayWord(c),.85,e.currentTarget);
+  $("#playSlow").onclick=e=>speak(sayWord(c),.55,e.currentTarget);
+  setTimeout(()=>speak(sayWord(c),.85,$("#play")),300);
+ }
+ app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(b,key(c)));
+}
+const PRAISE=["太棒了！","魔法命中！","好厲害！","閃閃發亮！","完美詠唱！","你真的很會！"];
+const KIND=["差一點點！","好勇敢的嘗試！","沒關係，魔法要練習！","這題很難，你很努力了！"];
+function answer(btn,correct){
+ const {c,t}=Qz.cur;const all=app.querySelectorAll(".opt");all.forEach(b=>b.disabled=true);
+ const ok=btn.textContent===correct;const fb=$("#fb");
+ if(ok){
+  btn.classList.add("right");all.forEach(b=>{if(b!==btn)b.classList.add("dim")});
+  Qz.right++;combo++;Qz.since++;if(combo>S.bestCombo)S.bestCombo=combo;
+  Qz.run[c.id]=(Qz.run[c.id]||0)+1;const mastered=Qz.run[c.id]>=2;if(mastered)Qz.done.add(c.id);
+  const pts=100+Math.min(combo,10)*10+(mastered?50:0);Qz.gain+=pts;
+  const r=btn.getBoundingClientRect();burst(r.left+r.width/2,r.top+10,mastered?34:22);
+  mastered?SFX.star():SFX.right();
+  if(t==="fill"){const parts=answerOf(c).split(" … ");app.querySelectorAll(".blank").forEach((b,i)=>{b.textContent=parts[i]||parts[0];b.classList.add("filled");});}
+  fb.innerHTML=mascot("happy","jump")+`<div class="bubble good">${PRAISE[Math.random()*PRAISE.length|0]} +${pts}<small>${mastered?`<span class="en">${c.w}</span> 收服了！⭐ +50`:`連擊 ${combo}・再答對一次就收服這個字`}</small></div>`;
+  addScore(pts,btn);
+  const cc=$("#comboChip");cc.textContent="✨ "+combo;cc.classList.toggle("hot",combo>=5);
+  $("#wstars").outerHTML=wordStars();updJourney();
+  if(Qz.since>=5){Qz.since=0;setTimeout(()=>{SFX.burst();rain(8);overlay("MAGIC BURST","魔法爆發！","連續答對 5 題 +200",1400);addScore(200,null);Qz.gain+=200;},700);}
+  save();
+  setTimeout(()=>speak(t==="fill"?c.ex:sayWord(c),.9),150);
+  setTimeout(nextQ,t==="fill"?2300:1500);
+ }else{
+  btn.classList.add("soft");all.forEach(b=>{if(b.textContent===correct)b.classList.add("right");else if(b!==btn)b.classList.add("dim")});
+  Qz.tries++;S.brave++;Qz.run[c.id]=0;Qz.gain+=10;SFX.kind();
+  const other=t==="listen"?"fill":"listen";
+  Qz.queue.splice(Math.min(2,Qz.queue.length),0,{c,t:other});
+  Qz.queue.splice(Math.min(4,Qz.queue.length),0,{c,t});
+  fb.innerHTML=mascot("kind","hug")+`<div class="bubble kind">${KIND[Math.random()*KIND.length|0]} 勇氣 +10<small>答案是 ${t==="listen"?`${c.zh}（<span class="en">${c.w}</span>）`:`<span class="en">${correct}</span>（${c.zh}）`}<br>這個字等一下會再來找你玩 💕</small></div>`;
+  addScore(10,btn);
+  const go=document.createElement("button");go.className="btn go";go.style.cssText="margin-top:12px;width:100%";go.textContent="好，我記住了 ✦";
+  go.onclick=()=>{SFX.tap();nextQ();};fb.after(go);
+  speak(sayWord(c),.85);save();
+ }
+}
+function finish(){
+ const k=gid(unit,gi),perfect=Qz.tries===0;
+ S.cleared[k]=Math.max(S.cleared[k]||0,perfect?2:1);
+ const bonus=perfect?300:150;S.score+=bonus;Qz.gain+=bonus;save();
+ if(perfect)giveBadge("perfect");checkBadges();
+ const hasNext=gi<unit.groups.length-1;
+ app.innerHTML=`<div class="fade done">${topbar(`${unit.name}・第 ${gi+1} 關`,true)}
+  <div class="journey"><div class="lab"><span>✦ 過關進度</span><b>100%</b></div><div class="track"><div class="fill" style="width:100%"></div></div></div>
+  <div class="trophy">🏆</div>
+  <h2>第 ${gi+1} 關・過關！</h2>
+  <div style="color:var(--soft);font-weight:800">${perfect?"💎 完美魔法・全部一次答對":"5 個字全部收服了 ⭐"}</div>
+  <div class="bigscore en" id="gain">+0</div>
+  <div class="statrow"><div class="stat"><b>${Qz.right}</b><small>答對</small></div><div class="stat"><b>${Qz.tries}</b><small>勇敢嘗試</small></div><div class="stat"><b>${S.bestCombo}</b><small>最高連擊</small></div></div>
+  <div class="col">${hasNext?`<button class="btn go" id="nextG">下一關 →</button>`:""}
+   <button class="btn ok" id="again">這關再玩一次</button>
+   <button class="btn ghost" id="home" style="flex:1">回到關卡地圖</button></div></div>`;
+ bindTop();SFX.win();rain(10);
+ const target=Qz.gain,t0=performance.now(),el=$("#gain");
+ const step=t=>{const p=Math.min(1,(t-t0)/1200);el.textContent="+"+Math.round(target*p).toLocaleString();if(p<1)requestAnimationFrame(step);else{tone(1568,.3,"sine",.1);countUp();}};requestAnimationFrame(step);
+ const n=$("#nextG");if(n)n.onclick=()=>{SFX.sparkle();gi++;li=0;phase={};holeSeen=new Set();Qz=null;learn();};
+ $("#again").onclick=()=>{SFX.sparkle();startQuiz();};
+ $("#home").onclick=()=>{SFX.tap();home();};
+}
+home();
+</script>
+</body>
+</html>
