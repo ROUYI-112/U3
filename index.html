@@ -95,7 +95,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;background:rgba(255,255,255,.06);filter:grayscale(1);opacity:.35;border:0}
 .badge.got{filter:none;opacity:1;background:linear-gradient(135deg,rgba(228,81,192,.35),rgba(122,216,255,.25));box-shadow:0 0 12px rgba(245,154,198,.45)}
 
-.units{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-bottom:12px}
 .unit{border:2px solid var(--line);background:var(--glass);border-radius:16px;padding:9px 4px;font-weight:800;text-align:center;line-height:1.25}
 .unit small{display:block;font-size:.76rem;color:var(--soft);font-weight:700}
 .unit.on{border-color:var(--pink);box-shadow:0 0 16px rgba(245,154,198,.55);background:linear-gradient(180deg,rgba(228,81,192,.35),var(--glass))}
@@ -434,12 +434,114 @@ theft:["identity theft|身分盜用","car theft|汽車竊盜"],
 };
 
 
+const B1_CARDS=[
+ {id:"a1-employ",t:"word",w:"employ",p:"v.",zh:"雇用；使用",ex:"After numerous job interviews, Thomas is now <mark>employed</mark> by a local company as a marketing manager.",co:["ask for a raise|要求加薪","work overtime|加班","find / seek employment|找工作","unemployment rate|失業率"],tip:"employ 也可當「使用」= apply"},
+ {id:"a1-employee",t:"word",w:"employee",p:"n.",zh:"員工",ex:"All the <mark>employees</mark> in this company are treated with respect, regardless of their age, gender, and position.",co:["employer|雇主（-er 執行動作的人）","employee|員工（-ee 接受動作的人）","examiner / examinee|主考官／考生"]},
+ {id:"a1-corporation",t:"word",w:"corporation",p:"n.",zh:"公司；企業",ex:"The CEO has set a goal to develop the company into an international <mark>corporation</mark>.",co:["global corporation|全球企業","corporate effort|跨部門合作"],tip:"混淆字：cooperate 合作"},
+ {id:"a1-suffer",t:"word",w:"suffer",p:"v.",zh:"受苦；罹患；遭受",ex:"My grandfather <mark>suffers from</mark> Alzheimer's disease.",co:["suffer from a heart condition|罹患心臟病","suffer a crushing defeat|慘敗","suffer the consequences|自作自受","cut down on|減少"]},
+ {id:"a1-terminal",t:"word",w:"terminal",p:"adj. / n.",zh:"末期的；航廈",ex:"This hospital was established for taking care of patients with <mark>terminal</mark> diseases.",co:["terminal cancer|末期癌症","international / domestic terminal|國際／國內航廈","make the most of the time left|善用剩下的時間"]},
+ {id:"a1-illness",t:"word",w:"illness",p:"n.",zh:"疾病",ex:"The little boy is recovering from a serious <mark>illness</mark>.",co:["fall ill|生病","acute / chronic illness|急性／慢性病","take a whole week off|請假一整週","unhealthy lifestyles|不健康的生活型態"]},
+ {id:"a1-tremendous",t:"word",w:"tremendous",p:"adj.",zh:"巨大的；極佳的",ex:"Jillian has made a <mark>tremendous</mark> effort to improve her academic performance.",co:["a tremendous amount of work|很多工作","a tremendous voice|好歌喉"]},
+ {id:"a1-laughter",t:"word",w:"laughter",p:"n.",zh:"笑聲",ex:"He never shows flashes of anger or falls into fits of <mark>laughter</mark>.",co:["burst into laughter|哄堂大笑","= burst out laughing|突然大笑"],tip:"laugh 是動詞；laughter 是名詞"},
+ {id:"a1-fright",t:"word",w:"fright",p:"n.",zh:"驚嚇",ex:"As soon as Vic saw a rat, he screamed and jumped with <mark>fright</mark>.",co:["frighten sb to death|把某人嚇得半死","run away in fright|嚇得逃跑","stage fright|怯場","have butterflies in one's stomach|非常緊張"],tip:"fright n. → frighten v."},
+ {id:"a1-contact",t:"word",w:"contact",p:"n. / v.",zh:"接觸；聯絡",ex:"Steven and Dave still try to stay in <mark>contact</mark> with each other.",co:["come into contact with|和…接觸","keep in contact|保持聯絡","lose contact / touch with|失去聯絡","eye contact|眼神接觸"]},
+ {id:"a1-germ",t:"word",w:"germ",p:"n.",zh:"病菌",ex:"Flies buzz around there and they could carry <mark>germs</mark>.",co:["a serious eye infection|嚴重的眼睛感染","germs / bacteria / virus|病菌／細菌／病毒"]},
+ {id:"a1-warmth",t:"word",w:"warmth",p:"n.",zh:"溫暖",ex:"Mindy was greeted with <mark>warmth</mark> and friendliness by a big family.",co:["a bit of warmth|一絲溫暖","greet sb with warmth|熱情迎接某人"]},
+ {id:"a1-frail",t:"word",w:"frail",p:"adj.",zh:"虛弱的；脆弱的",ex:"One of the firefighters heard a <mark>frail</mark> voice coming from the toilet.",co:["a frail voice|微弱的聲音","mentally frail|精神脆弱"],tip:"= weak 虛弱；= fragile 脆弱"},
+ {id:"a1-prompt",t:"word",w:"prompt",p:"v. / adj.",zh:"促使；立即的",ex:"The politician's racist remarks have <mark>prompted</mark> an angry response.",co:["prompt sb to V|促使某人做…","a prompt reply|立即的回覆","take prompt action|立即採取行動"]},
+ {id:"a1-confine",t:"word",w:"confine",p:"v.",zh:"限制；局限",ex:"Joseph has been <mark>confined</mark> to a wheelchair ever since.",co:["be confined to a wheelchair|只能坐輪椅","confine A to B|把 A 局限在 B"],tip:"混淆字：confide 傾訴"},
+ {id:"a1-sparkle",t:"word",w:"sparkle",p:"n. / v.",zh:"閃耀",ex:"The bride's diamond ring <mark>sparkled</mark> in the sunlight.",co:["sparkling water|氣泡水","the setting sun|夕陽"],tip:"近義：glitter, glisten, glow"},
+ {id:"a1-hug",t:"word",w:"hug",p:"n. / v.",zh:"擁抱",ex:"Kimberly couldn't wait to give her dog an affectionate <mark>hug</mark>.",co:["an affectionate hug|深情的擁抱","hug - hugged - hugged|動詞三態","do one's military service|服兵役"]},
+ {id:"a1-drowsy",t:"word",w:"drowsy",p:"adj.",zh:"昏昏欲睡的",ex:"The <mark>drowsy</mark> summer weather discourages people from going outdoors.",co:["feel drowsy|想睡覺","a drowsy field|毫無生氣的田野"]},
+ {id:"a1-stretch",t:"word",w:"stretch",p:"v. / n.",zh:"伸展；綿延",ex:"Exercises that <mark>stretch</mark> your arms and legs can help you with blood circulation.",co:["stretch out one's arm|伸長手臂","a rubber band|橡皮筋","a stretch of three months|連續三個月"]},
+ {id:"a1-refuse",t:"word",w:"refuse",p:"v.",zh:"拒絕",ex:"The celebrity still <mark>refused</mark> to talk about her private affairs.",co:["refuse to V|拒絕做…","be met with refusal|遭到拒絕"],tip:"refuse 堅決拒絕；reject 不採納；decline 婉拒"},
+ {id:"a1-hesitate",t:"word",w:"hesitate",p:"v.",zh:"猶豫",ex:"The teacher told his students not to <mark>hesitate</mark> to talk to her about anything.",co:["hesitate about sth|對某事猶豫","without hesitation|毫不猶豫"]}
+];
+const B2_CARDS=[
+ {id:"b2-innovative",t:"word",w:"innovative",p:"adj.",zh:"創新的",ex:"More and more <mark>innovative</mark> approaches to problem-solving have come up.",co:["take an innovative approach to Ving|用創新的方法…","innovate v. / innovation n.|創新"],tip:"approach to 的 to 是介系詞，接 Ving；混淆字 renovate 翻新"},
+ {id:"b2-innovation",t:"word",w:"innovation",p:"n.",zh:"創新",ex:"The Industrial Revolution has paved the way for many great scientific <mark>innovations</mark>.",co:["scientific innovations|科學創新","pave the way for|為…鋪路"]},
+ {id:"b2-promise",t:"word",w:"promise",p:"n. / v.",zh:"承諾；答應",ex:"Always try your best to keep every <mark>promise</mark> you make.",co:["make a promise|許下承諾","promise to V|保證會…","keep / break a promise|遵守／違背諾言","make an empty promise|開空頭支票"]},
+ {id:"b2-promising",t:"word",w:"promising",p:"adj.",zh:"有前途的",ex:"As a highly <mark>promising</mark> young actor, he soon appeared in several hit movies.",co:["have a promising future|前途光明","promise the moon|信口開河"]},
+ {id:"b2-material",t:"word",w:"material",p:"n.",zh:"材料",ex:"Sand is the main raw <mark>material</mark> used to produce glass.",co:["raw / toxic material|原料／有毒物質","recycled materials|回收材料"]},
+ {id:"b2-mention",t:"word",w:"mention",p:"v. / n.",zh:"提到",ex:"It's worth <mark>mentioning</mark> that this was the first time Brian hosted a talk show.",co:["to mention (but) a few|（舉例）…等等","not to mention|更別提","It's worth mentioning that…|值得一提的是"]},
+ {id:"b2-structure",t:"word",w:"structure",p:"n.",zh:"結構",ex:"The global financial crisis has changed the country's economic <mark>structure</mark> tremendously.",co:["economic structure|經濟結構","a well-structured essay|架構好的文章"]},
+ {id:"b2-capable",t:"word",w:"capable",p:"adj.",zh:"有能力的",ex:"I don't think the candidate is <mark>capable of</mark> fulfilling all his promises.",co:["be capable of + N / Ving|能夠","= be able to + VR|能夠","take lessons|上課"],tip:"反：incapable 無法"},
+ {id:"b2-capability",t:"word",w:"capability",p:"n.",zh:"能力",ex:"Teaching Japanese is well beyond my <mark>capabilities</mark>.",co:["beyond one's capabilities|超出能力範圍","within one's capabilities|在能力範圍內"]},
+ {id:"b2-collaborate",t:"word",w:"collaborate",p:"v.",zh:"合作",ex:"The film company <mark>collaborated</mark> with the local government to make the movie.",co:["collaborate with|和…合作","work in close collaboration with|與…密切合作","collaborative adj.|合作的"],tip:"co- 一起：co-worker 同事、correspond 回應、compromise 妥協"},
+ {id:"b2-architect",t:"word",w:"architect",p:"n.",zh:"建築師",ex:"After graduating from college, Lucy went on to become an <mark>architect</mark>.",co:["architect|建築師（人）","architecture|建築（物）"]},
+ {id:"b2-graduate",t:"word",w:"graduate",p:"v. / n.",zh:"畢業；畢業生",ex:"My uncle is proud of his son <mark>graduating from</mark> medical school.",co:["graduate from|從…畢業","upon graduation|一畢業就…","major in|主修"],tip:"學士 bachelor／碩士 master／博士 doctoral"},
+ {id:"b2-construct",t:"word",w:"construct",p:"v.",zh:"建造",ex:"There are plans to <mark>construct</mark> a new rapid transit system in the city.",co:["construct a huge construction|建造巨大建築","under construction|建造中","construction site|工地"],tip:"build 一般；construct 規模大；establish 組織制度"},
+ {id:"b2-constructive",t:"word",w:"constructive",p:"adj.",zh:"有建設性的",ex:"You shouldn't take it personally; he meant it as <mark>constructive</mark> criticism.",co:["constructive criticism|建設性的批評","constructive feedback|建設性的回饋","step on one's toes|得罪某人"]},
+ {id:"b2-slightly",t:"word",w:"slightly",p:"adv.",zh:"稍微",ex:"You've done <mark>slightly</mark> better than last time.",co:["a slight difference|細微的差異","make a slight change|做小小的改變"]},
+ {id:"b2-rank",t:"word",w:"rank",p:"v. / n.",zh:"排名；地位",ex:"Tai Tzu Ying has been <mark>ranked</mark> first among the world's female badminton players.",co:["rank as|排名為","rank first|排名第一","world rankings|世界排名","social rank|社會地位"]},
+ {id:"b2-unique",t:"word",w:"unique",p:"adj.",zh:"獨特的",ex:"Nick has a <mark>unique</mark> sense of humor that no one else can imitate.",co:["a unique sense of humor|獨特的幽默感","one-of-a-kind|獨一無二的"]},
+ {id:"b2-adjust",t:"word",w:"adjust",p:"v.",zh:"調整；適應",ex:"Rita had difficulty <mark>adjusting</mark> to her new job and thus quit.",co:["adjust / adapt to|適應","make some adjustments to|對…做調整"]},
+ {id:"b2-rely",t:"word",w:"rely",p:"v.",zh:"依賴",ex:"More people today <mark>rely heavily on</mark> the Internet for information.",co:["rely heavily on|高度依賴","reliable adj.|可靠的","reliance on|對…的依賴"]},
+ {id:"b2-feedback",t:"word",w:"feedback",p:"n.",zh:"回饋",ex:"The contestant was nervously waiting for the judges' <mark>feedback</mark> on his performance.",co:["provide feedback|提供回饋","feedback on|對…的回饋","constructive feedback|建設性的回饋"]},
+ {id:"b2-element",t:"word",w:"element",p:"n.",zh:"要素",ex:"Hard work is an essential <mark>element</mark> of success.",co:["an essential element|必要的元素","elementary principles|基本原則"]},
+ {id:"b2-stability",t:"word",w:"stability",p:"n.",zh:"穩定",ex:"Its worsening economy has threatened the peace and <mark>stability</mark> of that country.",co:["peace and stability|和平與穩定","stable income|穩定的收入"],tip:"stable ↔ unstable；stability ↔ instability"},
+ {id:"b2-route",t:"word",w:"route",p:"n.",zh:"路線",ex:"After studying the map, we took the shortest <mark>route</mark> back to the hotel.",co:["take a different route|改道","alternative routes|替代路線"]},
+ {id:"b2-explore",t:"word",w:"explore",p:"v.",zh:"探索",ex:"<mark>Exploring</mark> the rain forest has led to the discovery of several important new medicines.",co:["explore further|進一步探索","explore in detail|仔細探究","exploration n.|探索"],tip:"explore 探索未知；investigate 調查；inquire 正式詢問"}
+];
+const B3_CARDS=[
+ {id:"b3-humankind",t:"word",w:"humankind",p:"n.",zh:"人類（不可數）",ex:"Most philosophers ask questions about the mission and destiny of <mark>humankind</mark>.",co:["humankind = mankind = humanity|人類（不可數）","a human (being)|一個人（可數）"]},
+ {id:"b3-universal",t:"word",w:"universal",p:"adj.",zh:"普遍的",ex:"Happiness will always remain a subject of <mark>universal</mark> interest.",co:["universal acclaim|普遍讚賞","compared with|和…相比","regardless of|不論"]},
+ {id:"b3-fur",t:"word",w:"fur",p:"n.",zh:"毛皮",ex:"Lisa likes to stroke her cat's <mark>fur</mark>.",co:["be made from|由…（原料）製成","furry friend|毛小孩"]},
+ {id:"b3-enable",t:"word",w:"enable",p:"v.",zh:"使能夠",ex:"3D printing technology <mark>enables</mark> people to get real objects at a lower cost.",co:["enable sb to V|使某人能…","able / unable|能／不能","ability / disability|能力／障礙"]},
+ {id:"b3-upright",t:"word",w:"upright",p:"adj. / adv.",zh:"直立的；正直的",ex:"You can practice standing <mark>upright</mark> by pressing your back to the wall.",co:["stand / sit upright|站直／坐直","an upright person|正直的人"]},
+ {id:"b3-generosity",t:"word",w:"generosity",p:"n.",zh:"慷慨",ex:"Andy's <mark>generosity</mark> with money astonished his girlfriend.",co:["generosity with|對…很慷慨","be worth a fortune|價值不菲"],tip:"generous adj. 慷慨的"},
+ {id:"b3-conflict",t:"word",w:"conflict",p:"n. / v.",zh:"衝突",ex:"Judy's liberal views have brought her into <mark>conflict</mark> with the mainstream force.",co:["come into conflict with|和…起衝突","A conflict with B|A 和 B 抵觸","provoke / resolve a conflict|挑起／解決衝突","global / armed conflict|全球／武裝衝突"]},
+ {id:"b3-distribute",t:"word",w:"distribute",p:"v.",zh:"分配；分發",ex:"The relief food and clothing were quickly <mark>distributed</mark> to the people in the disaster area.",co:["be distributed to|被分配給","normal distribution|常態分布"]},
+ {id:"b3-benefit",t:"word",w:"benefit",p:"n. / v.",zh:"益處；獲益",ex:"Do you think children can <mark>benefit from</mark> a computerized learning environment?",co:["be of great benefit to|對…大有好處","benefit from|從…獲益","be beneficial to|對…有益"],tip:"benefit 益處；profit 金錢上的利益"},
+ {id:"b3-slaughter",t:"word",w:"slaughter",p:"n. / v.",zh:"屠宰；屠殺",ex:"Some farm animals like pigs or chickens are raised mainly for <mark>slaughter</mark>.",co:["slaughterhouse|屠宰場","be raised for slaughter|為宰殺而飼養"]},
+ {id:"b3-underneath",t:"word",w:"underneath",p:"prep.",zh:"在…底下",ex:"<mark>Underneath</mark> his cold face, Mr. Hong is actually a very kind and gentle person.",co:["underneath = under|（較正式的書面用語）"]},
+ {id:"b3-freeze",t:"word",w:"freeze",p:"v.",zh:"結冰；凍僵；僵住",ex:"Daisy did not wear a coat. She almost <mark>froze</mark> before she got home.",co:["freeze to death|凍死","freeze - froze - frozen|三態","freezer|冷凍庫"],tip:"第二義：僵住、不動"},
+ {id:"b3-victim",t:"word",w:"victim",p:"n.",zh:"受害者",ex:"The celebrity admitted that she used to be a <mark>victim</mark> of child abuse.",co:["fall victim to|受害於","take shelter|避難"]},
+ {id:"b3-miserable",t:"word",w:"miserable",p:"adj.",zh:"悲慘的",ex:"Most refugees have a <mark>miserable</mark> existence living in refugee camps.",co:["misery n.|痛苦","make peace|談和","people in need|需要幫助的人"]},
+ {id:"b3-hollow",t:"word",w:"hollow",p:"adj. / v.",zh:"中空的；挖空",ex:"My dad <mark>hollowed</mark> out a pumpkin to make a jack-o'-lantern.",co:["hollow out|挖空","hollow promises|空洞的承諾"]},
+ {id:"b3-furious",t:"word",w:"furious",p:"adj.",zh:"非常生氣的",ex:"Mandy was <mark>furious about</mark> the way sick dogs were treated.",co:["be furious at + 人|對某人很生氣","be furious about + 事|對某事很生氣","to our fury|令我們憤怒的是"],tip:"其他：fly into a rage, hit the ceiling, hot under the collar"},
+ {id:"b3-fury",t:"word",w:"fury",p:"n.",zh:"憤怒",ex:"The farmer was shaking with <mark>fury</mark> when his workers slaughtered the wrong pig.",co:["shake with fury|氣到發抖","blaze with fury|怒火中燒","trick sb into Ving|誘騙某人做…"]},
+ {id:"b3-theft",t:"word",w:"theft",p:"n.",zh:"偷竊；竊盜罪",ex:"The customer was taken to the police station on <mark>theft</mark> charges.",co:["identity theft|身分盜用","thief|小偷"]},
+ {id:"b3-punish",t:"word",w:"punish",p:"v.",zh:"處罰",ex:"Harry's mother <mark>punished</mark> him for his rudeness in front of the guests.",co:["the punishment for sth|對…的處罰","capital punishment|死刑","physical / corporal punishment|體罰"]},
+ {id:"b3-banish",t:"word",w:"banish",p:"v.",zh:"放逐",ex:"The writer was <mark>banished from</mark> his own country.",co:["be banished from|被逐出","banishment n.|放逐"]},
+ {id:"b3-torture",t:"word",w:"torture",p:"n. / v.",zh:"折磨",ex:"After suffering a series of <mark>tortures</mark>, the hostage was finally rescued.",co:["mental / physical torture|心理／身體的折磨"]},
+ {id:"b3-civilization",t:"word",w:"civilization",p:"n.",zh:"文明",ex:"Historians agree that most of the ancient <mark>civilizations</mark> developed along big rivers.",co:["an ancient civilization|古文明","the dawn of civilization|文明的開端","the decline of a civilization|文明的衰退"]}
+];
+const R1_CARDS=[
+ {id:"r1-artificial",t:"word",w:"artificial",p:"adj.",zh:"人造的；虛假的",ex:"I don't like packaged foods because they contain too much <mark>artificial</mark> flavoring.",co:["artificial intelligence (AI)|人工智慧","an artificial smile|假笑"],tip:"反義：natural"},
+ {id:"r1-coral",t:"word",w:"coral reef",p:"n.",zh:"珊瑚礁",ex:"Climate change has posed a serious threat to <mark>coral reefs</mark>.",co:["pose a serious threat to|嚴重威脅到"]},
+ {id:"r1-ridiculous",t:"word",w:"ridiculous",p:"adj.",zh:"荒唐的；可笑的",ex:"That gentleman looks <mark>ridiculous</mark> in his oversized trousers.",co:["= absurd|荒唐的","look ridiculous|看起來很可笑"]},
+ {id:"r1-ridicule",t:"word",w:"ridicule",p:"v. / n.",zh:"嘲笑",ex:"The woman became an object of <mark>ridicule</mark> among her friends.",co:["an object of ridicule|笑柄","= make fun of|嘲笑"]},
+ {id:"r1-layer",t:"word",w:"layer",p:"n. / v.",zh:"層；分層放",ex:"We skimmed the thin <mark>layer</mark> of grease off the soup.",co:["a thin layer of|一層薄薄的…","layer A with B|把 A 鋪上一層 B"]},
+ {id:"r1-electronic",t:"word",w:"electronic",p:"adj.",zh:"電子的",ex:"Many young people spend most of their time on their <mark>electronic</mark> devices.",co:["electronic gadgets / devices|電子裝置","electronic dictionary|電子辭典"],tip:"electric guitar 電吉他；electrical appliances 電器"},
+ {id:"r1-equip",t:"word",w:"equip",p:"v.",zh:"配備",ex:"The rebel army <mark>is equipped with</mark> advanced weapons.",co:["be equipped with|配有","a piece of equipment|一件設備"],tip:"equipment 不可數"},
+ {id:"r1-flexible",t:"word",w:"flexible",p:"adj.",zh:"有彈性的；靈活的",ex:"Our travel itinerary is quite <mark>flexible</mark>.",co:["flex one's muscles|活動肌肉","a flexible schedule|彈性的時間表"]},
+ {id:"r1-relatively",t:"word",w:"relatively",p:"adv.",zh:"相對地",ex:"Compared to Taiwan, the climate in New Zealand is <mark>relatively</mark> mild.",co:["with relative ease|相對輕鬆地","close relatives|近親"],tip:"= comparatively；反 absolutely"},
+ {id:"r1-temperature",t:"word",w:"temperature",p:"n.",zh:"溫度；體溫",ex:"A guard took my <mark>temperature</mark> before I went into the building.",co:["take one's temperature|量體溫","rising sea temperatures|上升的海溫"]},
+ {id:"r1-precious",t:"word",w:"precious",p:"adj.",zh:"珍貴的",ex:"Time is <mark>precious</mark>, so don't waste it.",co:["precious time|寶貴的時間","precious stones|寶石"]},
+ {id:"r1-balance",t:"word",w:"balance",p:"n. / v.",zh:"平衡",ex:"I do my best to strike a <mark>balance</mark> between work and family commitments.",co:["lose one's balance|失去平衡","strike a balance between|在…之間取得平衡","hang in the balance|懸而未決","a balanced view|不偏不倚的觀點"]},
+ {id:"r1-protect",t:"word",w:"protect",p:"v.",zh:"保護",ex:"This tall fence was set up to <mark>protect</mark> visitors from the family of lions.",co:["protect A from / against B|保護 A 免於 B","protection / protective|保護（n. / adj.）"]},
+ {id:"r1-habitat",t:"word",w:"habitat",p:"n.",zh:"棲息地",ex:"Because of deforestation, gorillas have lost 30% of their natural <mark>habitat</mark>.",co:["natural habitat|自然棲息地","be inhabited by|有…居住"]},
+ {id:"r1-texture",t:"word",w:"texture",p:"n.",zh:"質地",ex:"This bread has a soft <mark>texture</mark>.",co:["a smooth / rough texture|光滑／粗糙的質地"]},
+ {id:"r1-erect",t:"word",w:"erect",p:"v.",zh:"建造；豎立",ex:"A huge monument was <mark>erected</mark> in memory of the dead soldiers.",co:["in memory of|紀念","= build / construct / put up|建造"]},
+ {id:"r1-reduce",t:"word",w:"reduce",p:"v.",zh:"減少",ex:"Regular exercise can greatly <mark>reduce</mark> the risk of heart disease.",co:["greatly reduce|大幅減少","a significant reduction in|…大幅下降"],tip:"= decrease；反 increase"},
+ {id:"r1-assemble",t:"word",w:"assemble",p:"v.",zh:"組裝；聚集",ex:"Five hundred people <mark>assembled</mark> on the main street to protest the rising oil prices.",co:["= put together|組裝","assembly line|生產線","morning assembly|朝會"]},
+ {id:"r1-individual",t:"word",w:"individual",p:"adj. / n.",zh:"個別的；個人",ex:"Teachers have to be aware of the <mark>individual</mark> differences among their students.",co:["individual differences|個體差異","every individual|每個人"]},
+ {id:"r1-arm",t:"phrase",w:"cost an arm and a leg",p:"片語",zh:"非常昂貴",ex:"A commercial trip into outer space would <mark>cost an arm and a leg</mark>.",co:["= cost a fortune|非常昂貴"]},
+ {id:"r1-hand",t:"phrase",w:"give / lend sb a hand",p:"片語",zh:"幫助某人",ex:"The kind gentleman on the train <mark>gave me a hand</mark> by taking my luggage off the shelf.",co:["give sb a big hand|給某人熱烈掌聲"]},
+ {id:"r1-buildon",t:"phrase",w:"build on / upon",p:"片語",zh:"以…為基礎",ex:"A successful marriage <mark>builds on</mark> mutual respect and trust.",co:["build on mutual trust|建立在互信上"]},
+ {id:"r1-mapout",t:"phrase",w:"map out",p:"片語",zh:"詳細規劃",ex:"These parents have <mark>mapped out</mark> every detail of their kids' future.",co:["map out a plan|詳細規劃計畫"]}
+];
 const UNITS=[
+ {k:"b1",name:"B3L1",sub:"打破規則的那天",cards:B1_CARDS},
+ {k:"b2",name:"B3L2",sub:"棉花糖挑戰",cards:B2_CARDS},
+ {k:"b3",name:"B3L3",sub:"普羅米修斯",cards:B3_CARDS},
+ {k:"r1",name:"B3R1",sub:"3D 列印",cards:R1_CARDS},
  {k:"u3",name:"Unit 3",sub:"普羅米修斯",cards:CARDS},
  {k:"lt",name:"LT302",sub:"團隊合作",cards:LT_CARDS},
  {k:"t4",name:"Test 04",sub:"旅行與地理",cards:T_CARDS}
 ];
-UNITS.forEach(u=>{u.groups=[];for(let i=0;i<u.cards.length;i+=5)u.groups.push(u.cards.slice(i,i+5));});
+UNITS.forEach(u=>{u.groups=[];const n=u.cards.length,g=Math.ceil(n/5),base=Math.floor(n/g),extra=n%g;let i=0;for(let k=0;k<g;k++){const sz=base+(k<extra?1:0);u.groups.push(u.cards.slice(i,i+sz));i+=sz;}});
 const TITLES=["見習魔法生","星光學徒","月光騎士","彩窗魔導士","銀河守護者","傳說魔法師"];
 const LV=1000;
 const BADGES=[
@@ -451,7 +553,7 @@ const BADGES=[
  {id:"ear",ic:"🎧",n:"認真聆聽",d:"聽發音 50 次"},
  {id:"unit",ic:"🏰",n:"城堡攻略",d:"完成一整個單元"},
  {id:"s5k",ic:"👑",n:"五千魔力",d:"累積 5000 分"},
- {id:"all",ic:"🌌",n:"星窗傳說",d:"三個單元全部過關"}
+ {id:"all",ic:"🌌",n:"星窗傳說",d:"所有單元全部過關"}
 ];
 
 /* ---------- helpers ---------- */
@@ -463,12 +565,12 @@ const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")
 const cleanEx=c=>c.ex.replace(/<span class="nc">|<\/span>/g,"");
 const answerOf=c=>{const m=[...c.ex.matchAll(/<mark>(.*?)<\/mark>/g)].map(x=>strip(x[1]));return m.length?m.join(" … "):c.w;};
 const sayWord=c=>c.w.replace(/…/g," ").replace(/\bsb\b/g,"somebody").replace(/\bVing\b/g,"");
-const collosOf=c=>COLLO[c.id]||(c.tip?[c.tip+"|"]:[]);
+const collosOf=c=>c.co||COLLO[c.id]||(c.tip?[c.tip+"|"]:[]);
 const gid=(u,i)=>u.k+"-"+i;
 
 /* ---------- state ---------- */
 const KEY="eng-magic-window-v1";
-let S={unit:"u3",score:0,cleared:{},bestCombo:0,brave:0,listens:0,badges:{},muted:false};
+let S={unit:"b1",score:0,cleared:{},bestCombo:0,brave:0,listens:0,badges:{},muted:false};
 try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 let combo=0, shownScore=S.score;
@@ -654,7 +756,7 @@ function learn(){
     <div class="sec"><h3>📝 例句・先猜猜空格</h3><div class="example en">${holes}</div>
      ${c.exZh?`<div class="exzh">${c.exZh}</div>`:""}
      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="say" id="se">🔊 念例句</button><button class="say" id="sse">🐢 慢慢念</button></div></div>
-    ${c.tip&&COLLO[c.id]?`<div class="tipbox">💡 ${c.tip}</div>`:""}
+    ${c.tip&&(c.co||COLLO[c.id])?`<div class="tipbox">💡 ${c.tip}</div>`:""}
    </div>
   </div>
   <div class="dots">${g.map((_,i)=>`<i class="${i===li?"on":(phase[i]||0)>=1?"seen":""}"></i>`).join("")}</div>
